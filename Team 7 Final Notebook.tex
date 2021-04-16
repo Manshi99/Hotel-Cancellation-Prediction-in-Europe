@@ -1,0 +1,3652 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Team 7 Final Notebook}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{hotel-cancellation-prediction-in-europe}{%
+\section{Hotel Cancellation Prediction in
+Europe}\label{hotel-cancellation-prediction-in-europe}}
+
+    \begin{quote}
+By Weilin Zhang, Leah Fowlkes, Jiaqi Wang, Mingwei Li, Man Shi
+\end{quote}
+
+    \textbf{Project Description:}\\
+Our goal is to explore the hotel cancellation status in Europe. From a
+dataset which collected the information of more than 100,000 customers'
+booking information for a city hotel and a resort hotel in countries of
+Europe. By creating predictions for whether a customer will cancel a
+hotel room or not, we will harness 70\% of hotel data (training set) to
+build several prediction models that assigns a probability of
+cancellation for each hotel room in the last 30\% (test set). We will
+study the correlations between hotel cancellation and other features,
+such as deposity type, daily cost rate, and customer type to construct
+our prediction models. Finally, we would also compare the predictive
+performance on each supervised learning model and find which method get
+highest accuracy.
+
+\textbf{Data:}\\
+\href{https://www.kaggle.com/jessemostipak/hotel-booking-demand}{Link to
+original dataset.}
+
+    \hypertarget{initial-setup}{%
+\paragraph{Initial Setup}\label{initial-setup}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Install Packages for Analysis}
+\PY{n+nf}{install.packages}\PY{p}{(}\PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{MASS\PYZdq{}}\PY{p}{,}\PY{l+s}{\PYZdq{}}\PY{l+s}{caret\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\PY{n+nf}{install.packages}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{tidyverse\PYZdq{}}\PY{p}{)}
+\PY{n+nf}{install.packages}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{ggcorrplot\PYZdq{}}\PY{p}{)}
+\PY{n+nf}{install.packages}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{corrplot\PYZdq{}}\PY{p}{)}
+\PY{n+nf}{install.packages}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{pROC\PYZsq{}}\PY{p}{)}
+\PY{n+nf}{install.packages}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{e1071\PYZsq{}}\PY{p}{)}
+\PY{n+nf}{install.packages}\PY{p}{(}\PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{ggthemes\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{glmnet\PYZdq{}}\PY{p}{,}\PY{l+s}{\PYZdq{}}\PY{l+s}{pROC\PYZdq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Installing packages into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+Installing package into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+Installing package into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+Installing package into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+Installing package into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+Installing package into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+Installing packages into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{tinytex}\PY{o}{::}\PY{n+nf}{install\PYZus{}tinytex}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Load Packages}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{tidyverse}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{MASS}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{caret}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{magrittr}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{tidyr}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{zoo}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{data.table}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{ggplot2}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{scales}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{randomForest}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{e1071}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{corrplot}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{ggcorrplot}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{caTools}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{caret}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{pROC}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{glmnet}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{mlbench}\PY{p}{)}
+\PY{n+nf}{theme\PYZus{}set}\PY{p}{(}\PY{n+nf}{theme\PYZus{}bw}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+── \textbf{Attaching packages} ─────────────────────────────────────── tidyverse
+1.3.0 ──
+
+\textcolor{ansi-green}{✔} \textcolor{ansi-blue}{ggplot2} 3.3.3     \textcolor{ansi-green}{✔} \textcolor{ansi-blue}{purrr  } 0.3.4
+\textcolor{ansi-green}{✔} \textcolor{ansi-blue}{tibble } 3.0.6     \textcolor{ansi-green}{✔} \textcolor{ansi-blue}{dplyr  } 1.0.4
+\textcolor{ansi-green}{✔} \textcolor{ansi-blue}{tidyr  } 1.1.2     \textcolor{ansi-green}{✔} \textcolor{ansi-blue}{stringr} 1.4.0
+\textcolor{ansi-green}{✔} \textcolor{ansi-blue}{readr  } 1.4.0     \textcolor{ansi-green}{✔} \textcolor{ansi-blue}{forcats} 0.5.1
+
+── \textbf{Conflicts} ──────────────────────────────────────────
+tidyverse\_conflicts() ──
+\textcolor{ansi-red}{✖} \textcolor{ansi-blue}{dplyr}::\textcolor{ansi-green}{filter()} masks \textcolor{ansi-blue}{stats}::filter()
+\textcolor{ansi-red}{✖} \textcolor{ansi-blue}{dplyr}::\textcolor{ansi-green}{lag()}    masks \textcolor{ansi-blue}{stats}::lag()
+
+
+Attaching package: ‘MASS’
+
+
+The following object is masked from ‘package:dplyr’:
+
+    select
+
+
+Loading required package: lattice
+
+
+Attaching package: ‘caret’
+
+
+The following object is masked from ‘package:purrr’:
+
+    lift
+
+
+
+Attaching package: ‘magrittr’
+
+
+The following object is masked from ‘package:purrr’:
+
+    set\_names
+
+
+The following object is masked from ‘package:tidyr’:
+
+    extract
+
+
+
+Attaching package: ‘zoo’
+
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+
+
+Attaching package: ‘data.table’
+
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+
+
+Attaching package: ‘scales’
+
+
+The following object is masked from ‘package:purrr’:
+
+    discard
+
+
+The following object is masked from ‘package:readr’:
+
+    col\_factor
+
+
+randomForest 4.6-14
+
+Type rfNews() to see new features/changes/bug fixes.
+
+
+Attaching package: ‘randomForest’
+
+
+The following object is masked from ‘package:dplyr’:
+
+    combine
+
+
+The following object is masked from ‘package:ggplot2’:
+
+    margin
+
+
+corrplot 0.84 loaded
+
+Type 'citation("pROC")' for a citation.
+
+
+Attaching package: ‘pROC’
+
+
+The following objects are masked from ‘package:stats’:
+
+    cov, smooth, var
+
+
+Loading required package: Matrix
+
+
+Attaching package: ‘Matrix’
+
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+
+Loaded glmnet 4.1-1
+
+    \end{Verbatim}
+
+    \hypertarget{loading-the-hotel-data}{%
+\subsubsection{Loading the Hotel Data}\label{loading-the-hotel-data}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} European Hotel Data}
+\PY{n}{dat\PYZus{}eu} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{read.csv}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{eu\PYZus{}housing\PYZus{}data.csv\PYZdq{}}\PY{p}{)}
+\PY{n+nf}{head}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    A data.frame: 6 × 32
+\begin{tabular}{r|lllllllllllllllllllll}
+  & hotel & is\_canceled & lead\_time & arrival\_date\_year & arrival\_date\_month & arrival\_date\_week\_number & arrival\_date\_day\_of\_month & stays\_in\_weekend\_nights & stays\_in\_week\_nights & adults & ⋯ & deposit\_type & agent & company & days\_in\_waiting\_list & customer\_type & adr & required\_car\_parking\_spaces & total\_of\_special\_requests & reservation\_status & reservation\_status\_date\\
+  & <fct> & <int> & <int> & <int> & <fct> & <int> & <int> & <int> & <int> & <int> & ⋯ & <fct> & <fct> & <fct> & <int> & <fct> & <dbl> & <int> & <int> & <fct> & <fct>\\
+\hline
+	1 & Resort Hotel & 0 & 342 & 2015 & July & 27 & 1 & 0 & 0 & 2 & ⋯ & No Deposit & NULL & NULL & 0 & Transient &  0 & 0 & 0 & Check-Out & 2015-07-01\\
+	2 & Resort Hotel & 0 & 737 & 2015 & July & 27 & 1 & 0 & 0 & 2 & ⋯ & No Deposit & NULL & NULL & 0 & Transient &  0 & 0 & 0 & Check-Out & 2015-07-01\\
+	3 & Resort Hotel & 0 &   7 & 2015 & July & 27 & 1 & 0 & 1 & 1 & ⋯ & No Deposit & NULL & NULL & 0 & Transient & 75 & 0 & 0 & Check-Out & 2015-07-02\\
+	4 & Resort Hotel & 0 &  13 & 2015 & July & 27 & 1 & 0 & 1 & 1 & ⋯ & No Deposit & 304  & NULL & 0 & Transient & 75 & 0 & 0 & Check-Out & 2015-07-02\\
+	5 & Resort Hotel & 0 &  14 & 2015 & July & 27 & 1 & 0 & 2 & 2 & ⋯ & No Deposit & 240  & NULL & 0 & Transient & 98 & 0 & 1 & Check-Out & 2015-07-03\\
+	6 & Resort Hotel & 0 &  14 & 2015 & July & 27 & 1 & 0 & 2 & 2 & ⋯ & No Deposit & 240  & NULL & 0 & Transient & 98 & 0 & 1 & Check-Out & 2015-07-03\\
+\end{tabular}
+
+
+    
+    \hypertarget{data-description}{%
+\subsubsection{Data Description}\label{data-description}}
+
+    \begin{itemize}
+\tightlist
+\item
+  hotel (Resort Hotel or City Hotel)
+\item
+  is\_canceled: Value indicating if the booking was canceled (1) or not
+  (0)
+\item
+  lead\_time: Number of days that elapsed between the entering date of
+  the booking into the PMS and the arrival date
+\item
+  arrival\_date\_year: Year of arrival date
+\item
+  arrival\_date\_month: Month of arrival date
+\item
+  arrival\_date\_week\_number: Week number of year for arrival date
+\item
+  arrival\_date\_day\_of\_month: Day of arrival date
+\item
+  stays\_in\_weekend\_nights: Number of weekend nights (Saturday or
+  Sunday) the guest stayed or booked to stay at the hotel
+\item
+  stays\_in\_week\_nights: Number of week nights (Monday to Friday) the
+  guest stayed or booked to stay at the hotel
+\item
+  adults: Number of adults
+\item
+  children: Number of children
+\item
+  babies: Number of babies
+\item
+  meal: Type of meal booked. Categories are presented in standard
+  hospitality meal packages: Undefined/SC -- no meal package; BB -- Bed
+  \& Breakfast; HB -- Half board (breakfast and one other meal --
+  usually dinner); FB -- Full board (breakfast, lunch and dinner)
+\item
+  country: Country of origin. Categories are represented in the ISO
+  3155--3:2013 format
+\item
+  market\_segment: Market segment designation. In categories, the term
+  ``TA'' means ``Travel Agents'' and ``TO'' means ``Tour Operators''
+\item
+  distribution\_channel: Booking distribution channel. The term ``TA''
+  means ``Travel Agents'' and ``TO'' means ``Tour Operators''
+\item
+  is\_repeated\_guest: Value indicating if the booking name was from a
+  repeated guest (1) or not (0)
+\item
+  previous\_cancellations: Number of previous bookings that were
+  cancelled by the customer prior to the current booking
+\item
+  previous\_bookings\_not\_canceled: Number of previous bookings not
+  cancelled by the customer prior to the current booking
+\item
+  reserved\_room\_type: Code of room type reserved. Code is presented
+  instead of designation for anonymity reasons
+\item
+  assigned\_room\_type: Code for the type of room assigned to the
+  booking. Sometimes the assigned room type differs from the reserved
+  room type due to hotel operation reasons (e.g.~overbooking) or by
+  customer request. Code is presented instead of designation for
+  anonymity reasons
+\item
+  booking\_changes: Number of changes/amendments made to the booking
+  from the moment the booking was entered on the PMS until the moment of
+  check-in or cancellation
+\item
+  deposit\_type: Indication on if the customer made a deposit to
+  guarantee the booking. This variable can assume three categories: No
+  Deposit -- no deposit was made; Non Refund -- a deposit was made in
+  the value of the total stay cost; Refundable -- a deposit was made
+  with a value under the total cost of stay.
+\item
+  agent: ID of the travel agency that made the booking
+\item
+  company: ID of the company/entity that made the booking or responsible
+  for paying the booking. ID is presented instead of designation for
+  anonymity reasons
+\item
+  days\_in\_waiting\_list: Number of days the booking was in the waiting
+  list before it was confirmed to the customer
+\item
+  customer\_type: Type of booking, assuming one of four categories:
+  Contract - When the booking has an allotment or other type of contract
+  associated to it; Group - When the booking is associated to a group;
+  Transient - When the booking is not part of a group or contract, and
+  is not associated to other transient booking; Transient-party - When
+  the booking is transient, but is associated to at least other
+  transient booking
+\item
+  adr: Average Daily Rate as defined by dividing the sum of all lodging
+  transactions by the total number of staying nights
+\item
+  required\_car\_parking\_spaces: Number of car parking spaces required
+  by the customer
+\item
+  total\_of\_special\_requests: Number of special requests made by the
+  customer (e.g.~twin bed or high floor)
+\item
+  reservation\_status: Reservation last status, assuming one of three
+  categories: Canceled -- booking was canceled by the customer;
+  Check-Out -- customer has checked in but already departed; No-Show --
+  customer did not check-in and did inform the hotel of the reason why
+\item
+  reservation\_status\_date: Date at which the last status was set. This
+  variable can be used in conjunction with the ReservationStatus to
+  understand when was the booking canceled or when did the customer
+  checked-out of the hotel
+\end{itemize}
+
+    \hypertarget{reviewing-summary-statistics}{%
+\subsubsection{Reviewing Summary
+Statistics}\label{reviewing-summary-statistics}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Summary stats}
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+          hotel        is\_canceled       lead\_time     arrival\_date\_year
+ City Hotel  :68198   Min.   :0.0000   Min.   :  0.0   Min.   :2015     
+ Resort Hotel:36367   1st Qu.:0.0000   1st Qu.: 19.0   1st Qu.:2016     
+                      Median :0.0000   Median : 72.0   Median :2016     
+                      Mean   :0.3796   Mean   :107.5   Mean   :2016     
+                      3rd Qu.:1.0000   3rd Qu.:166.0   3rd Qu.:2017     
+                      Max.   :1.0000   Max.   :737.0   Max.   :2017     
+                                                                        
+ arrival\_date\_month arrival\_date\_week\_number arrival\_date\_day\_of\_month
+ August :12303      Min.   : 1.0             Min.   : 1.00            
+ July   :10812      1st Qu.:16.0             1st Qu.: 8.00            
+ May    :10164      Median :28.0             Median :16.00            
+ October:10023      Mean   :27.3             Mean   :15.79            
+ April  : 9734      3rd Qu.:38.0             3rd Qu.:23.00            
+ June   : 9424      Max.   :53.0             Max.   :31.00            
+ (Other):42105                                                        
+ stays\_in\_weekend\_nights stays\_in\_week\_nights     adults      
+ Min.   : 0.0000         Min.   : 0.000       Min.   : 0.000  
+ 1st Qu.: 0.0000         1st Qu.: 1.000       1st Qu.: 2.000  
+ Median : 1.0000         Median : 2.000       Median : 2.000  
+ Mean   : 0.9189         Mean   : 2.506       Mean   : 1.852  
+ 3rd Qu.: 2.0000         3rd Qu.: 3.000       3rd Qu.: 2.000  
+ Max.   :16.0000         Max.   :41.000       Max.   :55.000  
+                                                              
+    children            babies                 meal          country     
+ Min.   : 0.00000   Min.   : 0.000000   BB       :80863   PRT    :48590  
+ 1st Qu.: 0.00000   1st Qu.: 0.000000   FB       :  791   GBR    :12129  
+ Median : 0.00000   Median : 0.000000   HB       :13777   FRA    :10415  
+ Mean   : 0.09667   Mean   : 0.008205   SC       : 7985   ESP    : 8568  
+ 3rd Qu.: 0.00000   3rd Qu.: 0.000000   Undefined: 1149   DEU    : 7287  
+ Max.   :10.00000   Max.   :10.000000                     ITA    : 3766  
+ NA's   :4                                                (Other):13810  
+       market\_segment  distribution\_channel is\_repeated\_guest
+ Online TA    :46162   Corporate: 6218      Min.   :0.00000  
+ Offline TA/TO:22795   Direct   :12897      1st Qu.:0.00000  
+ Groups       :18863   GDS      :  152      Median :0.00000  
+ Direct       :10893   TA/TO    :85293      Mean   :0.03536  
+ Corporate    : 4902   Undefined:    5      3rd Qu.:0.00000  
+ Complementary:  719                        Max.   :1.00000  
+ (Other)      :  231                                         
+ previous\_cancellations previous\_bookings\_not\_canceled reserved\_room\_type
+ Min.   : 0.00000       Min.   : 0.0000                A      :76424     
+ 1st Qu.: 0.00000       1st Qu.: 0.0000                D      :16214     
+ Median : 0.00000       Median : 0.0000                E      : 5634     
+ Mean   : 0.09861       Mean   : 0.1483                F      : 2347     
+ 3rd Qu.: 0.00000       3rd Qu.: 0.0000                G      : 1702     
+ Max.   :26.00000       Max.   :72.0000                B      :  901     
+                                                       (Other): 1343     
+ assigned\_room\_type booking\_changes       deposit\_type       agent      
+ A      :65676      Min.   : 0.0000   No Deposit:89856   9      :25138  
+ D      :21814      1st Qu.: 0.0000   Non Refund:14554   NULL   :15083  
+ E      : 6758      Median : 0.0000   Refundable:  155   240    :12331  
+ F      : 3084      Mean   : 0.2143                      1      : 6995  
+ C      : 2122      3rd Qu.: 0.0000                      6      : 3220  
+ G      : 2090      Max.   :21.0000                      14     : 2898  
+ (Other): 3021                                           (Other):38900  
+    company      days\_in\_waiting\_list         customer\_type        adr         
+ NULL   :98201   Min.   :  0.000      Contract       : 3881   Min.   :  -6.38  
+ 40     :  924   1st Qu.:  0.000      Group          :  496   1st Qu.:  67.00  
+ 223    :  781   Median :  0.000      Transient      :77491   Median :  91.94  
+ 67     :  266   Mean   :  2.524      Transient-Party:22697   Mean   : 100.03  
+ 45     :  249   3rd Qu.:  0.000                              3rd Qu.: 123.30  
+ 153    :  206   Max.   :391.000                              Max.   :5400.00  
+ (Other): 3938                                                                 
+ required\_car\_parking\_spaces total\_of\_special\_requests reservation\_status
+ Min.   :0.00000             Min.   :0.0000            Canceled :38752   
+ 1st Qu.:0.00000             1st Qu.:0.0000            Check-Out:64870   
+ Median :0.00000             Median :0.0000            No-Show  :  943   
+ Mean   :0.06292             Mean   :0.5493                              
+ 3rd Qu.:0.00000             3rd Qu.:1.0000                              
+ Max.   :8.00000             Max.   :5.0000                              
+                                                                         
+ reservation\_status\_date
+ 2015-10-21: 1453       
+ 2015-07-06:  804       
+ 2016-11-25:  777       
+ 2015-01-01:  763       
+ 2016-01-18:  604       
+ 2015-07-02:  467       
+ (Other)   :99697       
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Review Structure}
+\PY{n+nf}{str}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+'data.frame':   104565 obs. of  32 variables:
+ \$ hotel                         : Factor w/ 2 levels "City Hotel","Resort
+Hotel": 2 2 2 2 2 2 2 2 2 2 {\ldots}
+ \$ is\_canceled                   : int  0 0 0 0 0 0 0 0 1 1 {\ldots}
+ \$ lead\_time                     : int  342 737 7 13 14 14 0 9 85 75 {\ldots}
+ \$ arrival\_date\_year             : int  2015 2015 2015 2015 2015 2015 2015 2015
+2015 2015 {\ldots}
+ \$ arrival\_date\_month            : Factor w/ 12 levels "April","August",..: 6 6
+6 6 6 6 6 6 6 6 {\ldots}
+ \$ arrival\_date\_week\_number      : int  27 27 27 27 27 27 27 27 27 27 {\ldots}
+ \$ arrival\_date\_day\_of\_month     : int  1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ stays\_in\_weekend\_nights       : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ stays\_in\_week\_nights          : int  0 0 1 1 2 2 2 2 3 3 {\ldots}
+ \$ adults                        : int  2 2 1 1 2 2 2 2 2 2 {\ldots}
+ \$ children                      : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ babies                        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ meal                          : Factor w/ 5 levels "BB","FB","HB",..: 1 1 1 1
+1 1 1 2 1 3 {\ldots}
+ \$ country                       : Factor w/ 28 levels "AUT","BEL","BGR",..: 24
+24 12 12 12 12 24 24 24 24 {\ldots}
+ \$ market\_segment                : Factor w/ 8 levels
+"Aviation","Complementary",..: 4 4 4 3 7 7 4 4 7 6 {\ldots}
+ \$ distribution\_channel          : Factor w/ 5 levels "Corporate","Direct",..: 2
+2 2 1 4 4 2 2 4 4 {\ldots}
+ \$ is\_repeated\_guest             : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ previous\_cancellations        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ previous\_bookings\_not\_canceled: int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ reserved\_room\_type            : Factor w/ 10 levels "A","B","C","D",..: 3 3 1
+1 1 1 3 3 1 4 {\ldots}
+ \$ assigned\_room\_type            : Factor w/ 12 levels "A","B","C","D",..: 3 3 3
+1 1 1 3 3 1 4 {\ldots}
+ \$ booking\_changes               : int  3 4 0 0 0 0 0 0 0 0 {\ldots}
+ \$ deposit\_type                  : Factor w/ 3 levels "No Deposit","Non
+Refund",..: 1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ agent                         : Factor w/ 322 levels "1","10","103",..: 322
+322 322 151 101 101 322 150 101 40 {\ldots}
+ \$ company                       : Factor w/ 343 levels "10","100","101",..: 343
+343 343 343 343 343 343 343 343 343 {\ldots}
+ \$ days\_in\_waiting\_list          : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ customer\_type                 : Factor w/ 4 levels "Contract","Group",..: 3 3
+3 3 3 3 3 3 3 3 {\ldots}
+ \$ adr                           : num  0 0 75 75 98 {\ldots}
+ \$ required\_car\_parking\_spaces   : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ total\_of\_special\_requests     : int  0 0 0 0 1 1 0 1 1 0 {\ldots}
+ \$ reservation\_status            : Factor w/ 3 levels "Canceled","Check-Out",..:
+2 2 2 2 2 2 2 2 1 1 {\ldots}
+ \$ reservation\_status\_date       : Factor w/ 926 levels
+"2014-10-17","2014-11-18",..: 122 122 123 123 124 124 124 124 73 62 {\ldots}
+    \end{Verbatim}
+
+    \hypertarget{checking-missing-value}{%
+\subsubsection{Checking Missing Value}\label{checking-missing-value}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat\PYZus{}eu} \PY{o}{==} \PY{l+s}{\PYZdq{}}\PY{l+s}{NULL\PYZdq{}}
+\PY{n+nf}{colSums}\PY{p}{(}\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} checking na values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{description*}
+\item[hotel] 0
+\item[is\textbackslash{}\_canceled] 0
+\item[lead\textbackslash{}\_time] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_year] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_month] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_week\textbackslash{}\_number] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_day\textbackslash{}\_of\textbackslash{}\_month] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_weekend\textbackslash{}\_nights] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_week\textbackslash{}\_nights] 0
+\item[adults] 0
+\item[children] 4
+\item[babies] 0
+\item[meal] 0
+\item[country] 0
+\item[market\textbackslash{}\_segment] 0
+\item[distribution\textbackslash{}\_channel] 0
+\item[is\textbackslash{}\_repeated\textbackslash{}\_guest] 0
+\item[previous\textbackslash{}\_cancellations] 0
+\item[previous\textbackslash{}\_bookings\textbackslash{}\_not\textbackslash{}\_canceled] 0
+\item[reserved\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[assigned\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[booking\textbackslash{}\_changes] 0
+\item[deposit\textbackslash{}\_type] 0
+\item[agent] 15083
+\item[company] 98201
+\item[days\textbackslash{}\_in\textbackslash{}\_waiting\textbackslash{}\_list] 0
+\item[customer\textbackslash{}\_type] 0
+\item[adr] 0
+\item[required\textbackslash{}\_car\textbackslash{}\_parking\textbackslash{}\_spaces] 0
+\item[total\textbackslash{}\_of\textbackslash{}\_special\textbackslash{}\_requests] 0
+\item[reservation\textbackslash{}\_status] 0
+\item[reservation\textbackslash{}\_status\textbackslash{}\_date] 0
+\end{description*}
+
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} childen, agent and company have missing values}
+\PY{n}{dat\PYZus{}eu} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{na.locf}\PY{p}{(}\PY{n+nf}{na.locf}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}\PY{p}{,} \PY{n}{fromLast} \PY{o}{=} \PY{k+kc}{TRUE}\PY{p}{)} \PY{c+c1}{\PYZsh{} backward fill NA in other three columns}
+\PY{n+nf}{colSums}\PY{p}{(}\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} NO NAs right now}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{description*}
+\item[hotel] 0
+\item[is\textbackslash{}\_canceled] 0
+\item[lead\textbackslash{}\_time] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_year] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_month] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_week\textbackslash{}\_number] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_day\textbackslash{}\_of\textbackslash{}\_month] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_weekend\textbackslash{}\_nights] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_week\textbackslash{}\_nights] 0
+\item[adults] 0
+\item[children] 0
+\item[babies] 0
+\item[meal] 0
+\item[country] 0
+\item[market\textbackslash{}\_segment] 0
+\item[distribution\textbackslash{}\_channel] 0
+\item[is\textbackslash{}\_repeated\textbackslash{}\_guest] 0
+\item[previous\textbackslash{}\_cancellations] 0
+\item[previous\textbackslash{}\_bookings\textbackslash{}\_not\textbackslash{}\_canceled] 0
+\item[reserved\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[assigned\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[booking\textbackslash{}\_changes] 0
+\item[deposit\textbackslash{}\_type] 0
+\item[agent] 0
+\item[company] 0
+\item[days\textbackslash{}\_in\textbackslash{}\_waiting\textbackslash{}\_list] 0
+\item[customer\textbackslash{}\_type] 0
+\item[adr] 0
+\item[required\textbackslash{}\_car\textbackslash{}\_parking\textbackslash{}\_spaces] 0
+\item[total\textbackslash{}\_of\textbackslash{}\_special\textbackslash{}\_requests] 0
+\item[reservation\textbackslash{}\_status] 0
+\item[reservation\textbackslash{}\_status\textbackslash{}\_date] 0
+\end{description*}
+
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{eda}{%
+\subsection{EDA}\label{eda}}
+
+    \hypertarget{correlation-matrix}{%
+\subparagraph{Correlation Matrix}\label{correlation-matrix}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} convert all factors to numeric}
+\PY{n}{df} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat\PYZus{}eu} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} \PY{n+nf}{mutate\PYZus{}if}\PY{p}{(}\PY{n}{is.factor}\PY{p}{,} \PY{n}{as.numeric}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} heatmap of correlation among variables}
+\PY{n+nf}{corrplot}\PY{p}{(}\PY{n+nf}{cor}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{,}\PY{n}{tl.cex} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{positively-correlated-variables}{%
+\subparagraph{Positively Correlated
+Variables}\label{positively-correlated-variables}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Cancellations Based on Deposit Type; Strongest Positive Correlation}
+
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{,}\PY{n+nf}{aes}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n+nf}{factor}\PY{p}{(}\PY{n}{deposit\PYZus{}type}\PY{p}{)}\PY{p}{,}\PY{n}{fill}\PY{o}{=}\PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{+}
+  
+\PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{p}{)}\PY{o}{+}\PY{n+nf}{theme}\PY{p}{(}\PY{n}{axis.text.x} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{,}\PY{n}{axis.text.y} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{)}\PY{o}{+}
+  
+\PY{n+nf}{labs}\PY{p}{(}
+    \PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancellation Based on Deposit Type\PYZdq{}}\PY{p}{,}
+    \PY{n}{x} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Deposit Type\PYZdq{}}\PY{p}{,}
+    \PY{n}{y} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{No. of Bookings\PYZdq{}}\PY{p}{,}\PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)} \PY{o}{+}
+   
+\PY{n+nf}{scale\PYZus{}fill\PYZus{}manual}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{labels} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{values} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{purple\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)}
+  \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_23_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Country}
+
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{n}{country}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{n}{fill} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{geom\PYZus{}text}\PY{p}{(}\PY{n}{stat} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{count\PYZdq{}}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{label} \PY{o}{=} \PY{n}{..count..}\PY{p}{)}\PY{p}{,} \PY{n}{hjust} \PY{o}{=} \PY{l+m}{1}\PY{p}{,}\PY{n}{size}\PY{o}{=}\PY{l+m}{4}\PY{p}{)} \PY{o}{+}
+  
+\PY{n+nf}{coord\PYZus{}flip}\PY{p}{(}\PY{p}{)} \PY{o}{+} \PY{n+nf}{labs}\PY{p}{(}\PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Country Booking Count\PYZdq{}}\PY{p}{,}
+                      \PY{n}{x} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{ountry\PYZdq{}}\PY{p}{,}
+                      \PY{n}{y} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Count\PYZdq{}}\PY{p}{)} \PY{o}{+} 
+
+\PY{n+nf}{theme}\PY{p}{(}\PY{n}{axis.text.x} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{,}\PY{n}{axis.text.y} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_24_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Lead Time and Hotel Type}
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{data} \PY{o}{=} \PY{n}{dat\PYZus{}eu}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{n}{hotel}\PY{p}{,}\PY{n}{y} \PY{o}{=} \PY{n}{lead\PYZus{}time}\PY{p}{,}\PY{n}{fill} \PY{o}{=} \PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{geom\PYZus{}boxplot}\PY{p}{(}\PY{n}{position} \PY{o}{=} \PY{n+nf}{position\PYZus{}dodge}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{labs}\PY{p}{(}
+    \PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancellation By Hotel Type based on Lead time\PYZdq{}}\PY{p}{,}
+    \PY{n}{x} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Hotel Type\PYZdq{}}\PY{p}{,}
+    \PY{n}{y} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Lead Time (Days)\PYZdq{}}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{theme}\PY{p}{(}\PY{n}{axis.text.x} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{,}\PY{n}{axis.text.y} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{)}\PY{o}{+}
+
+\PY{n+nf}{scale\PYZus{}fill\PYZus{}manual}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{labels} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{values} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{purple\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)}
+  \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Distribution Channels}
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{distribution\PYZus{}channel}\PY{p}{,} \PY{n}{fill} \PY{o}{=} \PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+  \PY{c+c1}{\PYZsh{} Add a bar layer with position \PYZdq{}fill\PYZdq{}}
+  \PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{n}{position} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{fill\PYZdq{}}\PY{p}{)} \PY{o}{+}
+  \PY{c+c1}{\PYZsh{} Add a brewer fill scale with default palette}
+  \PY{n+nf}{scale\PYZus{}fill\PYZus{}brewer}\PY{p}{(}\PY{p}{)} \PY{o}{+} 
+  \PY{n+nf}{scale\PYZus{}x\PYZus{}discrete}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Distribution Channels\PYZdq{}}\PY{p}{)} \PY{o}{+}
+  \PY{n+nf}{scale\PYZus{}y\PYZus{}continuous}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Count\PYZdq{}}\PY{p}{)}\PY{o}{+}
+  \PY{n+nf}{scale\PYZus{}fill\PYZus{}manual}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{labels} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{values} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{purple\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)}
+  \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Scale for 'fill' is already present. Adding another scale for 'fill', which
+will replace the existing scale.
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_26_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{negatively-correlated-variables}{%
+\subparagraph{Negatively Correlated
+Variables}\label{negatively-correlated-variables}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Cancellations By Reservation Status; strongest negative correlation}
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{,}\PY{n+nf}{aes}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n+nf}{factor}\PY{p}{(}\PY{n}{reservation\PYZus{}status}\PY{p}{)}\PY{p}{,}\PY{n}{fill}\PY{o}{=}\PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+\PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{n}{col} \PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{black\PYZdq{}}\PY{p}{,}\PY{n}{alpha}\PY{o}{=}\PY{l+m}{0.5}\PY{p}{)} \PY{o}{+}
+\PY{n+nf}{theme}\PY{p}{(}\PY{n}{axis.text.x} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{,}\PY{n}{axis.text.y} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+\PY{n+nf}{scale\PYZus{}x\PYZus{}discrete}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Reservation Status\PYZdq{}}\PY{p}{)} \PY{o}{+}
+\PY{n+nf}{scale\PYZus{}y\PYZus{}continuous}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Count\PYZdq{}}\PY{p}{)}\PY{o}{+}
+\PY{n+nf}{scale\PYZus{}fill\PYZus{}manual}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{labels} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{values} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{purple\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)}
+  \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_28_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Total special request}
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{data} \PY{o}{=} \PY{n}{dat\PYZus{}eu}\PY{p}{,}\PY{n+nf}{aes}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{n}{total\PYZus{}of\PYZus{}special\PYZus{}requests}\PY{p}{,}\PY{n}{y} \PY{o}{=} \PY{n+nf}{prop.table}\PY{p}{(}\PY{n+nf}{stat}\PY{p}{(}\PY{n}{count}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{n}{fill} \PY{o}{=} \PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{,}
+         \PY{n}{label} \PY{o}{=} \PY{n}{scales}\PY{o}{::}\PY{n+nf}{percent}\PY{p}{(}\PY{n+nf}{prop.table}\PY{p}{(}\PY{n+nf}{stat}\PY{p}{(}\PY{n}{count}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{n}{position} \PY{o}{=} \PY{n+nf}{position\PYZus{}dodge}\PY{p}{(}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+  
+\PY{n+nf}{geom\PYZus{}text}\PY{p}{(}\PY{n}{stat} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{count\PYZdq{}}\PY{p}{,}\PY{n}{position} \PY{o}{=} \PY{n+nf}{position\PYZus{}dodge}\PY{p}{(}\PY{n}{.}\PY{l+m}{9}\PY{p}{)}\PY{p}{,}\PY{n}{vjust} \PY{o}{=} \PY{l+m}{\PYZhy{}0.5}\PY{p}{,}\PY{n}{size} \PY{o}{=} \PY{l+m}{3}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{theme}\PY{p}{(}\PY{n}{axis.text.x} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{12}\PY{p}{)}\PY{p}{,}\PY{n}{axis.text.y} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{12}\PY{p}{)}\PY{p}{)}\PY{o}{+}
+
+\PY{n+nf}{scale\PYZus{}y\PYZus{}continuous}\PY{p}{(}\PY{n}{labels} \PY{o}{=} \PY{n}{scales}\PY{o}{::}\PY{n}{percent}\PY{p}{)} \PY{o}{+} \PY{n+nf}{coord\PYZus{}flip}\PY{p}{(}\PY{p}{)} \PY{o}{+}
+  
+\PY{n+nf}{labs}\PY{p}{(}\PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancellation Percent by Total Special Requests\PYZdq{}}\PY{p}{,}\PY{n}{x} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Total Special Requests\PYZdq{}}\PY{p}{,}\PY{n}{y} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Count\PYZdq{}}\PY{p}{)} \PY{o}{+}
+
+\PY{n+nf}{scale\PYZus{}fill\PYZus{}manual}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{labels} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{values} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{purple\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)}
+  \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_29_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Required Car Parking Spaces}
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{required\PYZus{}car\PYZus{}parking\PYZus{}spaces}\PY{p}{,} \PY{n}{fill} \PY{o}{=} \PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+  \PY{c+c1}{\PYZsh{} Change position to use the functional form, with width 0.2}
+  \PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{n}{position} \PY{o}{=} \PY{n+nf}{position\PYZus{}dodge}\PY{p}{(}\PY{n}{width} \PY{o}{=} \PY{l+m}{0.2}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+  \PY{n+nf}{scale\PYZus{}x\PYZus{}discrete}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Required Car Parking Spaces\PYZdq{}}\PY{p}{)} \PY{o}{+}
+  \PY{n+nf}{scale\PYZus{}y\PYZus{}continuous}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Count\PYZdq{}}\PY{p}{)}\PY{o}{+}
+  \PY{n+nf}{scale\PYZus{}fill\PYZus{}manual}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{labels} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{values} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{purple\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)}
+  \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_30_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Assigned room type}
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{,}\PY{n+nf}{aes}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n+nf}{factor}\PY{p}{(}\PY{n}{assigned\PYZus{}room\PYZus{}type}\PY{p}{)}\PY{p}{,}\PY{n}{fill}\PY{o}{=}\PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{o}{+}
+
+\PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{p}{)}\PY{o}{+}
+  
+\PY{n+nf}{theme}\PY{p}{(}\PY{n}{axis.text.x} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{,}\PY{n}{axis.text.y} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{)}\PY{o}{+}
+  
+\PY{n+nf}{labs}\PY{p}{(}
+    \PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancellation Based on Room Type\PYZdq{}}\PY{p}{,}
+    \PY{n}{x} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Room Type\PYZdq{}}\PY{p}{,}
+    \PY{n}{y} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{No. of Bookings\PYZdq{}}\PY{p}{,}\PY{n}{size}\PY{o}{=}\PY{l+m}{15}
+  \PY{p}{)} \PY{o}{+}
+   
+\PY{n+nf}{scale\PYZus{}fill\PYZus{}manual}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{labels} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{values} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{purple\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{pink\PYZdq{}}\PY{p}{)}
+  \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_31_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{interested-categories}{%
+\subparagraph{Interested Categories}\label{interested-categories}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Cancellations Per Month}
+
+\PY{c+c1}{\PYZsh{} Ordering y axis}
+\PY{n}{dat\PYZus{}eu}\PY{o}{\PYZdl{}}\PY{n}{arrival\PYZus{}date\PYZus{}month}  \PY{o}{=} \PY{n+nf}{factor}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{o}{\PYZdl{}}\PY{n}{arrival\PYZus{}date\PYZus{}month}\PY{p}{,} \PY{n}{levels}\PY{o}{=}\PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{December\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{November\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{October\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{September\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{August\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{July\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{June\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{May\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{April\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{March\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{February\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{January\PYZdq{}}\PY{p}{)}\PY{p}{)}
+
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{arrival\PYZus{}date\PYZus{}month}\PY{p}{,} \PY{n}{fill} \PY{o}{=} \PY{n+nf}{factor}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+\PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{p}{)} \PY{o}{+} \PY{n+nf}{geom\PYZus{}text}\PY{p}{(}\PY{n}{stat} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{count\PYZdq{}}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{label} \PY{o}{=} \PY{n}{..count..}\PY{p}{)}\PY{p}{,} \PY{n}{hjust} \PY{o}{=} \PY{l+m}{1}\PY{p}{,}\PY{n}{size}\PY{o}{=}\PY{l+m}{4}\PY{p}{)} \PY{o}{+} 
+\PY{n+nf}{coord\PYZus{}flip}\PY{p}{(}\PY{p}{)} \PY{o}{+} \PY{n+nf}{scale\PYZus{}fill\PYZus{}discrete}\PY{p}{(}
+    \PY{n}{name} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status\PYZdq{}}\PY{p}{,}
+    \PY{n}{breaks} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{0\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{1\PYZdq{}}\PY{p}{)}\PY{p}{,}
+    \PY{n}{label} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Not Cancelled\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{Cancelled\PYZdq{}}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+\PY{n+nf}{labs}\PY{p}{(}\PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Booking Status Each Month\PYZdq{}}\PY{p}{,}
+       \PY{n}{x} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Month\PYZdq{}}\PY{p}{,}
+       \PY{n}{y} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Count\PYZdq{}}\PY{p}{)} \PY{o}{+} 
+\PY{n+nf}{theme}\PY{p}{(}\PY{n}{axis.text.x} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{10}\PY{p}{)}\PY{p}{,}\PY{n}{axis.text.y} \PY{o}{=} \PY{n+nf}{element\PYZus{}text}\PY{p}{(}\PY{n}{face}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{bold\PYZdq{}}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m}{15}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_34_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{setup-for-train-and-test-sets}{%
+\subparagraph{Setup for Train and Test
+Sets}\label{setup-for-train-and-test-sets}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cols} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{agent\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{company\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZus{}date\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{country\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}year\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}month\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}week\PYZus{}number\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}day\PYZus{}of\PYZus{}month\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{assigned\PYZus{}room\PYZus{}type\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZdq{}}\PY{p}{)}
+\PY{n}{dat.clean} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat}\PY{p}{[}\PY{p}{,} \PY{n+nf}{setdiff}\PY{p}{(}\PY{n+nf}{colnames}\PY{p}{(}\PY{n}{dat}\PY{p}{)}\PY{p}{,} \PY{n}{cols}\PY{p}{)}\PY{p}{]}
+\PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{=} \PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+
+\PY{n}{training.samples} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} \PY{n+nf}{createDataPartition}\PY{p}{(}\PY{n}{p} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{,} \PY{n}{list} \PY{o}{=} \PY{k+kc}{FALSE}\PY{p}{)}
+
+\PY{n}{train}  \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\PY{n}{test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{additional-information}{%
+\section{Additional Information}\label{additional-information}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} How we Filtered the data from Original Dataset}
+\PY{c+c1}{\PYZsh{} Original Dataset}
+\PY{n}{dat} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{read.csv}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{hotel\PYZus{}bookings.csv\PYZdq{}}\PY{p}{,} \PY{n}{stringsAsFactors} \PY{o}{=} \PY{n+nb+bp}{T}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{}Filter out all EU countries}
+\PY{n}{eu\PYZus{}country} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{AUT\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{BEL\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{BGR\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{HRV\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{CYP\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{CZE\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{DNK\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{EST\PYZsq{}}\PY{p}{,} 
+                \PY{l+s}{\PYZsq{}}\PY{l+s}{FIN\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{FRA\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{DEU\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{GRC\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{HUN\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{IRL\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{ITA\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{LVA\PYZsq{}}\PY{p}{,} 
+                \PY{l+s}{\PYZsq{}}\PY{l+s}{LTU\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{LUX\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{MLT\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{NLD\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{POL\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{PRT\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{ROU\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{SVK\PYZsq{}}\PY{p}{,} 
+                \PY{l+s}{\PYZsq{}}\PY{l+s}{SVN\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{ESP\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{SWE\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{GBR\PYZsq{}}\PY{p}{)}
+
+\PY{n+nf}{for }\PY{p}{(}\PY{n}{i} \PY{n}{in} \PY{n}{dat}\PY{p}{[}\PY{l+s}{\PYZsq{}}\PY{l+s}{country\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{\PYZob{}}
+  \PY{n}{check} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{i} \PY{o}{\PYZpc{}in\PYZpc{}} \PY{n}{eu\PYZus{}country} 
+  \PY{n}{check\PYZus{}country} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{c}\PY{p}{(}\PY{n}{check}\PY{p}{)}
+\PY{p}{\PYZcb{}}
+
+\PY{n}{dat}\PY{p}{[}\PY{l+s}{\PYZsq{}}\PY{l+s}{check\PYZus{}country\PYZsq{}}\PY{p}{]} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{check\PYZus{}country}
+
+\PY{n}{dat\PYZus{}eu} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{subset}\PY{p}{(}\PY{n}{dat}\PY{p}{,} \PY{n}{check\PYZus{}country} \PY{o}{==} \PY{k+kc}{TRUE}\PY{p}{)}
+
+\PY{n}{dat\PYZus{}eu} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat\PYZus{}eu}\PY{p}{[}\PY{p}{,}\PY{l+m}{1}\PY{o}{:}\PY{l+m}{32}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} Original Cleaning of Data}
+\PY{c+c1}{\PYZsh{} childen, agent and company have missing values}
+\PY{n}{dat\PYZus{}eu} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{na.locf}\PY{p}{(}\PY{n+nf}{na.locf}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}\PY{p}{,} \PY{n}{fromLast} \PY{o}{=} \PY{k+kc}{TRUE}\PY{p}{)} \PY{c+c1}{\PYZsh{} backward fill NA in other three columns}
+\PY{n+nf}{colSums}\PY{p}{(}\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} NO NAs right now}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{linear-lasso-ridge-regression}{%
+\section{Linear, Lasso, Ridge
+Regression}\label{linear-lasso-ridge-regression}}
+
+    \hypertarget{linear-regression}{%
+\subsubsection{Linear regression}\label{linear-regression}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cols} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{agent\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{company\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZus{}date\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{country\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}year\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}month\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}week\PYZus{}number\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}day\PYZus{}of\PYZus{}month\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{assigned\PYZus{}room\PYZus{}type\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZdq{}}\PY{p}{)}
+\PY{n}{dat.clean} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat}\PY{p}{[}\PY{p}{,} \PY{n+nf}{setdiff}\PY{p}{(}\PY{n+nf}{colnames}\PY{p}{(}\PY{n}{dat}\PY{p}{)}\PY{p}{,} \PY{n}{cols}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{86}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} heatmap of correlation among variables}
+\PY{n+nf}{corrplot}\PY{p}{(}\PY{n+nf}{cor}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{,}\PY{n}{tl.cex} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_46_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{head}\PY{p}{(}\PY{n}{dat.clean}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    A data.frame: 6 × 22
+\begin{tabular}{r|lllllllllllllllllllll}
+  & hotel & is\_canceled & lead\_time & stays\_in\_weekend\_nights & stays\_in\_week\_nights & adults & children & babies & meal & market\_segment & ⋯ & previous\_cancellations & previous\_bookings\_not\_canceled & reserved\_room\_type & booking\_changes & deposit\_type & days\_in\_waiting\_list & customer\_type & adr & required\_car\_parking\_spaces & total\_of\_special\_requests\\
+  & <fct> & <int> & <int> & <int> & <int> & <int> & <int> & <int> & <fct> & <fct> & ⋯ & <int> & <int> & <fct> & <int> & <fct> & <int> & <fct> & <dbl> & <int> & <int>\\
+\hline
+	1 & Resort Hotel & 0 & 342 & 0 & 0 & 2 & 0 & 0 & BB & Direct    & ⋯ & 0 & 0 & C & 3 & No Deposit & 0 & Transient &  0 & 0 & 0\\
+	2 & Resort Hotel & 0 & 737 & 0 & 0 & 2 & 0 & 0 & BB & Direct    & ⋯ & 0 & 0 & C & 4 & No Deposit & 0 & Transient &  0 & 0 & 0\\
+	3 & Resort Hotel & 0 &   7 & 0 & 1 & 1 & 0 & 0 & BB & Direct    & ⋯ & 0 & 0 & A & 0 & No Deposit & 0 & Transient & 75 & 0 & 0\\
+	4 & Resort Hotel & 0 &  13 & 0 & 1 & 1 & 0 & 0 & BB & Corporate & ⋯ & 0 & 0 & A & 0 & No Deposit & 0 & Transient & 75 & 0 & 0\\
+	5 & Resort Hotel & 0 &  14 & 0 & 2 & 2 & 0 & 0 & BB & Online TA & ⋯ & 0 & 0 & A & 0 & No Deposit & 0 & Transient & 98 & 0 & 1\\
+	6 & Resort Hotel & 0 &  14 & 0 & 2 & 2 & 0 & 0 & BB & Online TA & ⋯ & 0 & 0 & A & 0 & No Deposit & 0 & Transient & 98 & 0 & 1\\
+\end{tabular}
+
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{} The dataset is split into train and test set in 70:30 ratio with the is\PYZus{}canceled feature as the response}
+\PY{n+nf}{set.seed}\PY{p}{(}\PY{l+m}{100}\PY{p}{)}
+\PY{n}{training.samples} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} 
+  \PY{n+nf}{createDataPartition}\PY{p}{(}\PY{n}{p} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{,} \PY{n}{list} \PY{o}{=} \PY{k+kc}{FALSE}\PY{p}{)}
+\PY{n}{train}  \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\PY{n}{test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+
+\PY{n}{y.train} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{train}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}
+\PY{n}{y.test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{f1} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{as.formula}\PY{p}{(}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZti{}} \PY{n}{lead\PYZus{}time} \PY{o}{+} \PY{n}{total\PYZus{}of\PYZus{}special\PYZus{}requests} \PY{o}{+} \PY{n}{deposit\PYZus{}type}\PY{o}{+}\PY{n}{required\PYZus{}car\PYZus{}parking\PYZus{}spaces}\PY{p}{)}
+\PY{n}{fit.lm1} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{lm}\PY{p}{(}\PY{n}{f1}\PY{p}{,} \PY{n}{train}\PY{p}{)}
+\PY{n}{yhat.train.lm1} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.lm1}\PY{p}{)}
+\PY{n}{mse.train.lm1} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{mean}\PY{p}{(}\PY{p}{(}\PY{n}{y.train} \PY{o}{\PYZhy{}} \PY{n}{yhat.train.lm1}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)}
+\PY{n}{mse.train.lm1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    0.1651200862462
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{yhat.test.lm1} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.lm1}\PY{p}{,} \PY{n}{test}\PY{p}{)}
+\PY{n}{mse.test.lm1} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{mean}\PY{p}{(}\PY{p}{(}\PY{n}{y.test} \PY{o}{\PYZhy{}} \PY{n}{yhat.test.lm1}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)}
+\PY{n}{mse.test.lm1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    0.162776445251584
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{fit.lm1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Call:
+lm(formula = f1, data = train)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.00024 -0.29891 -0.21432  0.09996  1.75181 
+
+Coefficients:
+                              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                  2.927e-01  2.505e-03 116.840  < 2e-16 ***
+lead\_time                    5.165e-04  1.492e-05  34.622  < 2e-16 ***
+total\_of\_special\_requests   -6.133e-02  2.001e-03 -30.647  < 2e-16 ***
+deposit\_typeNon Refund       5.908e-01  4.900e-03 120.578  < 2e-16 ***
+deposit\_typeRefundable      -1.141e-01  3.971e-02  -2.872  0.00408 ** 
+required\_car\_parking\_spaces -2.645e-01  6.211e-03 -42.582  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.4064 on 73190 degrees of freedom
+Multiple R-squared:  0.2987,	Adjusted R-squared:  0.2987 
+F-statistic:  6235 on 5 and 73190 DF,  p-value: < 2.2e-16
+
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{predicted}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.lm1}\PY{p}{,}\PY{n}{newdata}\PY{o}{=}\PY{n}{test}\PY{p}{)}
+\PY{n}{TAB}\PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{table}\PY{p}{(}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,}\PY{n}{predicted} \PY{o}{\PYZgt{}} \PY{l+m}{0.5}\PY{p}{)}
+\PY{n}{mcrate} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{sum}\PY{p}{(}\PY{n+nf}{diag}\PY{p}{(}\PY{n}{TAB}\PY{p}{)}\PY{p}{)}\PY{o}{/}\PY{n+nf}{sum}\PY{p}{(}\PY{n}{TAB}\PY{p}{)}  
+\PY{n}{mcrate}
+\end{Verbatim}
+\end{tcolorbox}
+
+    0.760145366444579
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Fit the linear regression on the training data}
+\PY{n}{lm\PYZus{}reg}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{lm}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{,}\PY{n}{data}\PY{o}{=}\PY{n}{train}\PY{p}{)}
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{lm\PYZus{}reg}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Call:
+lm(formula = is\_canceled \textasciitilde{} ., data = train)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.7533 -0.2827 -0.1423  0.1795  1.7938 
+
+Coefficients:
+                                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)                     0.0875019  0.0322688   2.712 0.006696 ** 
+hotelResort Hotel               0.0031035  0.0037942   0.818 0.413381    
+lead\_time                       0.0005811  0.0000160  36.306  < 2e-16 ***
+stays\_in\_weekend\_nights         0.0068137  0.0017011   4.006 6.19e-05 ***
+stays\_in\_week\_nights            0.0062422  0.0009437   6.615 3.75e-11 ***
+adults                          0.0242695  0.0025762   9.421  < 2e-16 ***
+children                        0.0279937  0.0049654   5.638 1.73e-08 ***
+babies                          0.0621775  0.0138640   4.485 7.31e-06 ***
+mealFB                          0.0497322  0.0171374   2.902 0.003709 ** 
+mealHB                         -0.0255700  0.0046711  -5.474 4.41e-08 ***
+mealSC                          0.0043094  0.0059922   0.719 0.472043    
+mealUndefined                  -0.0887132  0.0144774  -6.128 8.96e-10 ***
+market\_segmentComplementary     0.0963021  0.0373923   2.575 0.010013 *  
+market\_segmentCorporate        -0.0055924  0.0316963  -0.176 0.859952    
+market\_segmentDirect            0.0050558  0.0339825   0.149 0.881731    
+market\_segmentGroups            0.0006141  0.0328510   0.019 0.985085    
+market\_segmentOffline TA/TO    -0.0768459  0.0328420  -2.340 0.019293 *  
+market\_segmentOnline TA         0.1340365  0.0328276   4.083 4.45e-05 ***
+distribution\_channelDirect     -0.0360443  0.0136955  -2.632 0.008494 ** 
+distribution\_channelGDS        -0.2030654  0.0395696  -5.132 2.88e-07 ***
+distribution\_channelTA/TO       0.0237480  0.0108562   2.188 0.028709 *  
+distribution\_channelUndefined   0.1194060  0.3886331   0.307 0.758657    
+is\_repeated\_guest               0.0030979  0.0091784   0.338 0.735724    
+previous\_cancellations          0.0252228  0.0016572  15.220  < 2e-16 ***
+previous\_bookings\_not\_canceled -0.0036471  0.0010826  -3.369 0.000756 ***
+reserved\_room\_typeB             0.0101038  0.0161989   0.624 0.532804    
+reserved\_room\_typeC             0.0356077  0.0178723   1.992 0.046338 *  
+reserved\_room\_typeD            -0.0091992  0.0044155  -2.083 0.037218 *  
+reserved\_room\_typeE             0.0234119  0.0068559   3.415 0.000638 ***
+reserved\_room\_typeF            -0.0401938  0.0111479  -3.606 0.000312 ***
+reserved\_room\_typeG             0.0142842  0.0133112   1.073 0.283232    
+reserved\_room\_typeH             0.0177806  0.0212979   0.835 0.403803    
+reserved\_room\_typeL             0.1321693  0.1737495   0.761 0.446846    
+reserved\_room\_typeP             0.6862218  0.2746533   2.499 0.012474 *  
+booking\_changes                -0.0544374  0.0023627 -23.040  < 2e-16 ***
+deposit\_typeNon Refund          0.6099344  0.0061574  99.058  < 2e-16 ***
+deposit\_typeRefundable         -0.0325312  0.0375725  -0.866 0.386589    
+days\_in\_waiting\_list           -0.0001033  0.0000815  -1.268 0.204947    
+customer\_typeGroup             -0.0269867  0.0227077  -1.188 0.234665    
+customer\_typeTransient          0.0641824  0.0079368   8.087 6.22e-16 ***
+customer\_typeTransient-Party    0.0271360  0.0085004   3.192 0.001412 ** 
+adr                             0.0005600  0.0000344  16.279  < 2e-16 ***
+required\_car\_parking\_spaces    -0.2553529  0.0061192 -41.730  < 2e-16 ***
+total\_of\_special\_requests      -0.1150879  0.0021027 -54.734  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.3883 on 73150 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:   0.36,	Adjusted R-squared:  0.3596 
+F-statistic: 956.8 on 43 and 73150 DF,  p-value: < 2.2e-16
+
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{predicted}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{predict}\PY{p}{(}\PY{n}{lm\PYZus{}reg}\PY{p}{,}\PY{n}{newdata}\PY{o}{=}\PY{n}{test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{TAB}\PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{table}\PY{p}{(}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,}\PY{n}{predicted} \PY{o}{\PYZgt{}} \PY{l+m}{0.5}\PY{p}{)}
+\PY{n}{TAB}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+   
+    FALSE  TRUE
+  0 18731   693
+  1  5923  6020
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mcrate} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{sum}\PY{p}{(}\PY{n+nf}{diag}\PY{p}{(}\PY{n}{TAB}\PY{p}{)}\PY{p}{)}\PY{o}{/}\PY{n+nf}{sum}\PY{p}{(}\PY{n}{TAB}\PY{p}{)}  
+\PY{n}{mcrate}
+\end{Verbatim}
+\end{tcolorbox}
+
+    0.78907769311697
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Plot the ROC curve to check the performance of final model}
+\PY{n}{lm\PYZus{}roc}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{roc}\PY{p}{(}\PY{n}{y.test}\PY{p}{,}\PY{n}{predicted}\PY{p}{,}\PY{n}{auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n+nf}{plot}\PY{p}{(}\PY{n}{lm\PYZus{}roc}\PY{p}{,}\PY{n}{print.auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{,}\PY{n}{print.auc.y}\PY{o}{=}\PY{n}{.}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Setting levels: control = 0, case = 1
+
+Setting direction: controls < cases
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_57_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{ridge-regression}{%
+\subsubsection{Ridge Regression}\label{ridge-regression}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{141}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Convert the type of response from integer to categorical (dummy variable)}
+\PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{142}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} The dataset is split into train and test set in 70:30 ratio with the is\PYZus{}canceled feature as the response}
+\PY{n+nf}{set.seed}\PY{p}{(}\PY{l+m}{100}\PY{p}{)}
+\PY{n}{training.samples} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} 
+  \PY{n+nf}{createDataPartition}\PY{p}{(}\PY{n}{p} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{,} \PY{n}{list} \PY{o}{=} \PY{k+kc}{FALSE}\PY{p}{)}
+\PY{n}{train}  \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\PY{n}{test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{143}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{f1} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{as.formula}\PY{p}{(}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{)}
+\PY{n}{x1.train} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{model.matrix}\PY{p}{(}\PY{n}{f1}\PY{p}{,} \PY{n}{train}\PY{p}{)}\PY{p}{[}\PY{p}{,} \PY{l+m}{\PYZhy{}1}\PY{p}{]}
+\PY{n}{y.train} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{train}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}
+\PY{n}{x1.test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{model.matrix}\PY{p}{(}\PY{n}{f1}\PY{p}{,} \PY{n}{test}\PY{p}{)}\PY{p}{[}\PY{p}{,} \PY{l+m}{\PYZhy{}1}\PY{p}{]}
+\PY{n}{y.test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Fit ridge regression model with 10 folds cross validation on the training set}
+\PY{n}{fit.ridge} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{cv.glmnet}\PY{p}{(}\PY{n}{x1.train}\PY{p}{,} \PY{n}{y.train}\PY{p}{,} \PY{n}{alpha} \PY{o}{=} \PY{l+m}{0}\PY{p}{,} \PY{n}{nfolds} \PY{o}{=} \PY{l+m}{10}\PY{p}{,} \PY{n}{family} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{binomial\PYZdq{}}\PY{p}{)}
+\PY{n}{ridge\PYZus{}pred\PYZus{}train} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.ridge}\PY{p}{,} \PY{n}{x1.train}\PY{p}{,} \PY{n}{s} \PY{o}{=} \PY{n}{fit.ridge}\PY{o}{\PYZdl{}}\PY{n}{lambda.1se}\PY{p}{,} \PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{class\PYZsq{}}\PY{p}{)}
+\PY{n+nf}{confusionMatrix}\PY{p}{(}\PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{ridge\PYZus{}pred\PYZus{}train}\PY{p}{)}\PY{p}{,}\PY{n}{y.train}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0 43375 12651
+         1  2034 15136
+                                          
+               Accuracy : 0.7994          
+                 95\% CI : (0.7965, 0.8023)
+    No Information Rate : 0.6204          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.54            
+                                          
+ Mcnemar's Test P-Value : < 2.2e-16       
+                                          
+            Sensitivity : 0.9552          
+            Specificity : 0.5447          
+         Pos Pred Value : 0.7742          
+         Neg Pred Value : 0.8815          
+             Prevalence : 0.6204          
+         Detection Rate : 0.5926          
+   Detection Prevalence : 0.7654          
+      Balanced Accuracy : 0.7500          
+                                          
+       'Positive' Class : 0               
+                                          
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Prediction on the test set}
+\PY{n}{ridge\PYZus{}pred\PYZus{}class} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.ridge}\PY{p}{,} \PY{n}{x1.test}\PY{p}{,} \PY{n}{s} \PY{o}{=} \PY{n}{fit.ridge}\PY{o}{\PYZdl{}}\PY{n}{lambda.1se}\PY{p}{,} \PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{class\PYZsq{}}\PY{p}{)}
+\PY{n+nf}{confusionMatrix}\PY{p}{(}\PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{ridge\PYZus{}pred\PYZus{}class}\PY{p}{)}\PY{p}{,}\PY{n}{y.test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0 18537  5404
+         1   924  6504
+                                          
+               Accuracy : 0.7983          
+                 95\% CI : (0.7938, 0.8027)
+    No Information Rate : 0.6204          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.538           
+                                          
+ Mcnemar's Test P-Value : < 2.2e-16       
+                                          
+            Sensitivity : 0.9525          
+            Specificity : 0.5462          
+         Pos Pred Value : 0.7743          
+         Neg Pred Value : 0.8756          
+             Prevalence : 0.6204          
+         Detection Rate : 0.5909          
+   Detection Prevalence : 0.7632          
+      Balanced Accuracy : 0.7494          
+                                          
+       'Positive' Class : 0               
+                                          
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{87}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Plot the ROC curve to check the performance of final model}
+\PY{n}{ridge\PYZus{}pred\PYZus{}prob}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.ridge}\PY{p}{,} \PY{n}{x1.test}\PY{p}{,} \PY{n}{s} \PY{o}{=} \PY{n}{fit.ridge}\PY{o}{\PYZdl{}}\PY{n}{lambda.1se}\PY{p}{,}\PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{response\PYZdq{}}\PY{p}{)}
+\PY{n}{ridge\PYZus{}roc}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{roc}\PY{p}{(}\PY{n}{y.test}\PY{p}{,}\PY{n}{ridge\PYZus{}pred\PYZus{}prob}\PY{p}{,}\PY{n}{auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n+nf}{plot}\PY{p}{(}\PY{n}{ridge\PYZus{}roc}\PY{p}{,}\PY{n}{print.auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{,}\PY{n}{print.auc.y}\PY{o}{=}\PY{n}{.}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Installing package into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+Type 'citation("pROC")' for a citation.
+
+
+Attaching package: ‘pROC’
+
+
+The following objects are masked from ‘package:stats’:
+
+    cov, smooth, var
+
+
+Setting levels: control = 0, case = 1
+
+Warning message in roc.default(y.test, ridge\_pred\_prob, auc = TRUE):
+“Deprecated use a matrix as predictor. Unexpected results may be produced,
+please pass a numeric vector.”
+Setting direction: controls < cases
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_64_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{lasso-regression}{%
+\subsubsection{Lasso Regression}\label{lasso-regression}}
+
+    Create a random subsample to fit the lasso regression model first since
+our dataset is too large
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{145}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{train.sample.size} \PY{o}{\PYZlt{}\PYZhy{}} \PY{l+m}{15000}
+\PY{n}{train.sample} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{train}\PY{p}{[}\PY{n+nf}{sample}\PY{p}{(}\PY{n+nf}{nrow}\PY{p}{(}\PY{n}{train}\PY{p}{)}\PY{p}{,} \PY{n}{train.sample.size}\PY{p}{)}\PY{p}{,}\PY{p}{]}
+
+\PY{n}{x1.train.sample} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{model.matrix}\PY{p}{(}\PY{n}{f1}\PY{p}{,} \PY{n}{train.sample}\PY{p}{)}\PY{p}{[}\PY{p}{,} \PY{l+m}{\PYZhy{}1}\PY{p}{]}
+\PY{n}{y.train.sample} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{train.sample}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Fit lasso regression model on training sample set
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{92}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fit.lasso} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{cv.glmnet}\PY{p}{(}\PY{n}{x1.train.sample}\PY{p}{,} \PY{n}{y.train.sample}\PY{p}{,} \PY{n}{alpha} \PY{o}{=} \PY{l+m}{1}\PY{p}{,}\PY{n}{nfolds} \PY{o}{=} \PY{l+m}{10}\PY{p}{,} \PY{n}{family} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{binomial\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Warning message:
+“from glmnet Fortran code (error code -76); Convergence for 76th lambda value
+not reached after maxit=100000 iterations; solutions for larger lambdas
+returned”
+Warning message:
+“from glmnet Fortran code (error code -75); Convergence for 75th lambda value
+not reached after maxit=100000 iterations; solutions for larger lambdas
+returned”
+Warning message:
+“from glmnet Fortran code (error code -75); Convergence for 75th lambda value
+not reached after maxit=100000 iterations; solutions for larger lambdas
+returned”
+Warning message:
+“from glmnet Fortran code (error code -75); Convergence for 75th lambda value
+not reached after maxit=100000 iterations; solutions for larger lambdas
+returned”
+Warning message:
+“from glmnet Fortran code (error code -75); Convergence for 75th lambda value
+not reached after maxit=100000 iterations; solutions for larger lambdas
+returned”
+Warning message:
+“from glmnet Fortran code (error code -75); Convergence for 75th lambda value
+not reached after maxit=100000 iterations; solutions for larger lambdas
+returned”
+Warning message:
+“from glmnet Fortran code (error code -75); Convergence for 75th lambda value
+not reached after maxit=100000 iterations; solutions for larger lambdas
+returned”
+    \end{Verbatim}
+
+    Get the coefficients of variables
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{112}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{lasso.coef} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.lasso}\PY{p}{,}
+                      \PY{n}{type} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{coefficients\PYZdq{}}\PY{p}{,}
+                      \PY{n}{s} \PY{o}{=} \PY{n}{fit.lasso}\PY{o}{\PYZdl{}}\PY{n}{lambda}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Plot the coefficients versus the log(lambda)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{113}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{to\PYZus{}plot} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{data.table}\PY{p}{(}
+  \PY{n}{lambda} \PY{o}{=} \PY{n}{fit.lasso}\PY{o}{\PYZdl{}}\PY{n}{lambda}\PY{p}{,}
+  \PY{n}{coef\PYZus{}value} \PY{o}{=} \PY{n}{lasso.coef}\PY{p}{[}\PY{l+m}{2}\PY{p}{,} \PY{p}{]}
+\PY{p}{)}
+\PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{to\PYZus{}plot}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n+nf}{log}\PY{p}{(}\PY{n}{lambda}\PY{p}{)}\PY{p}{,} \PY{n}{coef\PYZus{}value}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+  \PY{n+nf}{geom\PYZus{}line}\PY{p}{(}\PY{p}{)} \PY{o}{+}
+  \PY{n+nf}{theme\PYZus{}few}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_73_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Prediction on the training set
+
+    For the result of the training model, we can observe that our model
+perfectly preticted 12204 out of 15000, giving the accuracy of 81.36\%.
+There were 2796 cases that our model got wrong. These 2796 cases were
+divided between False negatives and false positives as 425 and 2371
+respectively.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{157}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{lasso\PYZus{}pred\PYZus{}train} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.lasso}\PY{p}{,} \PY{n}{x1.train.sample}\PY{p}{,} \PY{n}{s} \PY{o}{=} \PY{n}{fit.lasso}\PY{o}{\PYZdl{}}\PY{n}{lambda.1se}\PY{p}{,} \PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{class\PYZsq{}}\PY{p}{)}
+\PY{n+nf}{confusionMatrix}\PY{p}{(}\PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{lasso\PYZus{}pred\PYZus{}train}\PY{p}{)}\PY{p}{,}\PY{n}{y.train.sample}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Confusion Matrix and Statistics
+
+          Reference
+Prediction    0    1
+         0 8865 2371
+         1  425 3339
+                                          
+               Accuracy : 0.8136          
+                 95\% CI : (0.8073, 0.8198)
+    No Information Rate : 0.6193          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.5769          
+                                          
+ Mcnemar's Test P-Value : < 2.2e-16       
+                                          
+            Sensitivity : 0.9543          
+            Specificity : 0.5848          
+         Pos Pred Value : 0.7890          
+         Neg Pred Value : 0.8871          
+             Prevalence : 0.6193          
+         Detection Rate : 0.5910          
+   Detection Prevalence : 0.7491          
+      Balanced Accuracy : 0.7695          
+                                          
+       'Positive' Class : 0               
+                                          
+    \end{Verbatim}
+
+    
+    Prediction on the test set
+
+    For the result of the testing model, we can observe that our model
+perfectly preticted 25080 out of 31368, giving the accuracy of 79.95\%.
+There were 6288 cases that our model got wrong. These 6288 cases were
+divided between False negatives and false positives as 1143 and 5145
+respectively.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{160}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{lasso\PYZus{}pred\PYZus{}class} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.lasso}\PY{p}{,} \PY{n}{x1.test}\PY{p}{,} \PY{n}{s} \PY{o}{=} \PY{n}{fit.lasso}\PY{o}{\PYZdl{}}\PY{n}{lambda.1se}\PY{p}{,} \PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{class\PYZsq{}}\PY{p}{)}
+\PY{n+nf}{confusionMatrix}\PY{p}{(}\PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{lasso\PYZus{}pred\PYZus{}class}\PY{p}{)}\PY{p}{,}\PY{n}{y.test}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0 18317  5145
+         1  1143  6763
+                                         
+               Accuracy : 0.7995         
+                 95\% CI : (0.7951, 0.804)
+    No Information Rate : 0.6204         
+    P-Value [Acc > NIR] : < 2.2e-16      
+                                         
+                  Kappa : 0.5447         
+                                         
+ Mcnemar's Test P-Value : < 2.2e-16      
+                                         
+            Sensitivity : 0.9413         
+            Specificity : 0.5679         
+         Pos Pred Value : 0.7807         
+         Neg Pred Value : 0.8554         
+             Prevalence : 0.6204         
+         Detection Rate : 0.5839         
+   Detection Prevalence : 0.7480         
+      Balanced Accuracy : 0.7546         
+                                         
+       'Positive' Class : 0              
+                                         
+    \end{Verbatim}
+
+    
+    Plot the ROC curve to check the performance of final model
+
+    As evident, our model has an AUC of 0.833.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{166}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{lasso\PYZus{}pred\PYZus{}prob} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.lasso}\PY{p}{,} \PY{n}{x1.test}\PY{p}{,} \PY{n}{s} \PY{o}{=} \PY{n}{fit.lasso}\PY{o}{\PYZdl{}}\PY{n}{lambda.1se}\PY{p}{,} \PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{response\PYZsq{}}\PY{p}{)}
+\PY{n}{lasso\PYZus{}roc}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{roc}\PY{p}{(}\PY{n}{y.test}\PY{p}{,}\PY{n}{lasso\PYZus{}pred\PYZus{}prob}\PY{p}{,}\PY{n}{auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n+nf}{plot}\PY{p}{(}\PY{n}{lasso\PYZus{}roc}\PY{p}{,}\PY{n}{print.auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{,}\PY{n}{print.auc.y}\PY{o}{=}\PY{n}{.}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Setting levels: control = 0, case = 1
+
+Warning message in roc.default(y.test[-1], lasso\_pred\_prob, auc = TRUE):
+“Deprecated use a matrix as predictor. Unexpected results may be produced,
+please pass a numeric vector.”
+Setting direction: controls < cases
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_82_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{logistic-regression}{%
+\section{Logistic Regression}\label{logistic-regression}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{tidyverse}\PY{p}{)}
+\PY{n}{is\PYZus{}installed} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{function}\PY{p}{(}\PY{n}{mypkg}\PY{p}{)} \PY{n+nf}{is.element}\PY{p}{(}\PY{n}{mypkg}\PY{p}{,} \PY{n+nf}{installed.packages}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{p}{,}\PY{l+m}{1}\PY{p}{]}\PY{p}{)}
+\PY{n}{dat} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{read.csv}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{eu\PYZus{}housing\PYZus{}data.csv\PYZdq{}}\PY{p}{,} \PY{n}{stringsAsFactors} \PY{o}{=} \PY{n+nb+bp}{T}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{dat}\PY{p}{)}
+\PY{n+nf}{str}\PY{p}{(}\PY{n}{dat}\PY{p}{)}
+\PY{n+nf}{colSums}\PY{p}{(}\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} checking na values}
+\PY{n}{dat}\PY{o}{\PYZdl{}}\PY{n}{children}\PY{p}{[}\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat}\PY{o}{\PYZdl{}}\PY{n}{children}\PY{p}{)}\PY{p}{]} \PY{o}{\PYZlt{}\PYZhy{}} \PY{l+m}{0} \PY{c+c1}{\PYZsh{} fill by mode}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+          hotel        is\_canceled       lead\_time     arrival\_date\_year
+ City Hotel  :68198   Min.   :0.0000   Min.   :  0.0   Min.   :2015     
+ Resort Hotel:36367   1st Qu.:0.0000   1st Qu.: 19.0   1st Qu.:2016     
+                      Median :0.0000   Median : 72.0   Median :2016     
+                      Mean   :0.3796   Mean   :107.5   Mean   :2016     
+                      3rd Qu.:1.0000   3rd Qu.:166.0   3rd Qu.:2017     
+                      Max.   :1.0000   Max.   :737.0   Max.   :2017     
+                                                                        
+ arrival\_date\_month arrival\_date\_week\_number arrival\_date\_day\_of\_month
+ August :12303      Min.   : 1.0             Min.   : 1.00            
+ July   :10812      1st Qu.:16.0             1st Qu.: 8.00            
+ May    :10164      Median :28.0             Median :16.00            
+ October:10023      Mean   :27.3             Mean   :15.79            
+ April  : 9734      3rd Qu.:38.0             3rd Qu.:23.00            
+ June   : 9424      Max.   :53.0             Max.   :31.00            
+ (Other):42105                                                        
+ stays\_in\_weekend\_nights stays\_in\_week\_nights     adults      
+ Min.   : 0.0000         Min.   : 0.000       Min.   : 0.000  
+ 1st Qu.: 0.0000         1st Qu.: 1.000       1st Qu.: 2.000  
+ Median : 1.0000         Median : 2.000       Median : 2.000  
+ Mean   : 0.9189         Mean   : 2.506       Mean   : 1.852  
+ 3rd Qu.: 2.0000         3rd Qu.: 3.000       3rd Qu.: 2.000  
+ Max.   :16.0000         Max.   :41.000       Max.   :55.000  
+                                                              
+    children            babies                 meal          country     
+ Min.   : 0.00000   Min.   : 0.000000   BB       :80863   PRT    :48590  
+ 1st Qu.: 0.00000   1st Qu.: 0.000000   FB       :  791   GBR    :12129  
+ Median : 0.00000   Median : 0.000000   HB       :13777   FRA    :10415  
+ Mean   : 0.09667   Mean   : 0.008205   SC       : 7985   ESP    : 8568  
+ 3rd Qu.: 0.00000   3rd Qu.: 0.000000   Undefined: 1149   DEU    : 7287  
+ Max.   :10.00000   Max.   :10.000000                     ITA    : 3766  
+ NA's   :4                                                (Other):13810  
+       market\_segment  distribution\_channel is\_repeated\_guest
+ Online TA    :46162   Corporate: 6218      Min.   :0.00000  
+ Offline TA/TO:22795   Direct   :12897      1st Qu.:0.00000  
+ Groups       :18863   GDS      :  152      Median :0.00000  
+ Direct       :10893   TA/TO    :85293      Mean   :0.03536  
+ Corporate    : 4902   Undefined:    5      3rd Qu.:0.00000  
+ Complementary:  719                        Max.   :1.00000  
+ (Other)      :  231                                         
+ previous\_cancellations previous\_bookings\_not\_canceled reserved\_room\_type
+ Min.   : 0.00000       Min.   : 0.0000                A      :76424     
+ 1st Qu.: 0.00000       1st Qu.: 0.0000                D      :16214     
+ Median : 0.00000       Median : 0.0000                E      : 5634     
+ Mean   : 0.09861       Mean   : 0.1483                F      : 2347     
+ 3rd Qu.: 0.00000       3rd Qu.: 0.0000                G      : 1702     
+ Max.   :26.00000       Max.   :72.0000                B      :  901     
+                                                       (Other): 1343     
+ assigned\_room\_type booking\_changes       deposit\_type       agent      
+ A      :65676      Min.   : 0.0000   No Deposit:89856   9      :25138  
+ D      :21814      1st Qu.: 0.0000   Non Refund:14554   NULL   :15083  
+ E      : 6758      Median : 0.0000   Refundable:  155   240    :12331  
+ F      : 3084      Mean   : 0.2143                      1      : 6995  
+ C      : 2122      3rd Qu.: 0.0000                      6      : 3220  
+ G      : 2090      Max.   :21.0000                      14     : 2898  
+ (Other): 3021                                           (Other):38900  
+    company      days\_in\_waiting\_list         customer\_type        adr         
+ NULL   :98201   Min.   :  0.000      Contract       : 3881   Min.   :  -6.38  
+ 40     :  924   1st Qu.:  0.000      Group          :  496   1st Qu.:  67.00  
+ 223    :  781   Median :  0.000      Transient      :77491   Median :  91.94  
+ 67     :  266   Mean   :  2.524      Transient-Party:22697   Mean   : 100.03  
+ 45     :  249   3rd Qu.:  0.000                              3rd Qu.: 123.30  
+ 153    :  206   Max.   :391.000                              Max.   :5400.00  
+ (Other): 3938                                                                 
+ required\_car\_parking\_spaces total\_of\_special\_requests reservation\_status
+ Min.   :0.00000             Min.   :0.0000            Canceled :38752   
+ 1st Qu.:0.00000             1st Qu.:0.0000            Check-Out:64870   
+ Median :0.00000             Median :0.0000            No-Show  :  943   
+ Mean   :0.06292             Mean   :0.5493                              
+ 3rd Qu.:0.00000             3rd Qu.:1.0000                              
+ Max.   :8.00000             Max.   :5.0000                              
+                                                                         
+ reservation\_status\_date
+ 2015-10-21: 1453       
+ 2015-07-06:  804       
+ 2016-11-25:  777       
+ 2015-01-01:  763       
+ 2016-01-18:  604       
+ 2015-07-02:  467       
+ (Other)   :99697       
+    \end{Verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+'data.frame':   104565 obs. of  32 variables:
+ \$ hotel                         : Factor w/ 2 levels "City Hotel","Resort
+Hotel": 2 2 2 2 2 2 2 2 2 2 {\ldots}
+ \$ is\_canceled                   : int  0 0 0 0 0 0 0 0 1 1 {\ldots}
+ \$ lead\_time                     : int  342 737 7 13 14 14 0 9 85 75 {\ldots}
+ \$ arrival\_date\_year             : int  2015 2015 2015 2015 2015 2015 2015 2015
+2015 2015 {\ldots}
+ \$ arrival\_date\_month            : Factor w/ 12 levels "April","August",..: 6 6
+6 6 6 6 6 6 6 6 {\ldots}
+ \$ arrival\_date\_week\_number      : int  27 27 27 27 27 27 27 27 27 27 {\ldots}
+ \$ arrival\_date\_day\_of\_month     : int  1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ stays\_in\_weekend\_nights       : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ stays\_in\_week\_nights          : int  0 0 1 1 2 2 2 2 3 3 {\ldots}
+ \$ adults                        : int  2 2 1 1 2 2 2 2 2 2 {\ldots}
+ \$ children                      : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ babies                        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ meal                          : Factor w/ 5 levels "BB","FB","HB",..: 1 1 1 1
+1 1 1 2 1 3 {\ldots}
+ \$ country                       : Factor w/ 28 levels "AUT","BEL","BGR",..: 24
+24 12 12 12 12 24 24 24 24 {\ldots}
+ \$ market\_segment                : Factor w/ 8 levels
+"Aviation","Complementary",..: 4 4 4 3 7 7 4 4 7 6 {\ldots}
+ \$ distribution\_channel          : Factor w/ 5 levels "Corporate","Direct",..: 2
+2 2 1 4 4 2 2 4 4 {\ldots}
+ \$ is\_repeated\_guest             : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ previous\_cancellations        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ previous\_bookings\_not\_canceled: int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ reserved\_room\_type            : Factor w/ 10 levels "A","B","C","D",..: 3 3 1
+1 1 1 3 3 1 4 {\ldots}
+ \$ assigned\_room\_type            : Factor w/ 12 levels "A","B","C","D",..: 3 3 3
+1 1 1 3 3 1 4 {\ldots}
+ \$ booking\_changes               : int  3 4 0 0 0 0 0 0 0 0 {\ldots}
+ \$ deposit\_type                  : Factor w/ 3 levels "No Deposit","Non
+Refund",..: 1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ agent                         : Factor w/ 322 levels "1","10","103",..: 322
+322 322 151 101 101 322 150 101 40 {\ldots}
+ \$ company                       : Factor w/ 343 levels "10","100","101",..: 343
+343 343 343 343 343 343 343 343 343 {\ldots}
+ \$ days\_in\_waiting\_list          : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ customer\_type                 : Factor w/ 4 levels "Contract","Group",..: 3 3
+3 3 3 3 3 3 3 3 {\ldots}
+ \$ adr                           : num  0 0 75 75 98 {\ldots}
+ \$ required\_car\_parking\_spaces   : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ total\_of\_special\_requests     : int  0 0 0 0 1 1 0 1 1 0 {\ldots}
+ \$ reservation\_status            : Factor w/ 3 levels "Canceled","Check-Out",..:
+2 2 2 2 2 2 2 2 1 1 {\ldots}
+ \$ reservation\_status\_date       : Factor w/ 926 levels
+"2014-10-17","2014-11-18",..: 122 122 123 123 124 124 124 124 73 62 {\ldots}
+    \end{Verbatim}
+
+    \begin{description*}
+\item[hotel] 0
+\item[is\textbackslash{}\_canceled] 0
+\item[lead\textbackslash{}\_time] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_year] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_month] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_week\textbackslash{}\_number] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_day\textbackslash{}\_of\textbackslash{}\_month] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_weekend\textbackslash{}\_nights] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_week\textbackslash{}\_nights] 0
+\item[adults] 0
+\item[children] 4
+\item[babies] 0
+\item[meal] 0
+\item[country] 0
+\item[market\textbackslash{}\_segment] 0
+\item[distribution\textbackslash{}\_channel] 0
+\item[is\textbackslash{}\_repeated\textbackslash{}\_guest] 0
+\item[previous\textbackslash{}\_cancellations] 0
+\item[previous\textbackslash{}\_bookings\textbackslash{}\_not\textbackslash{}\_canceled] 0
+\item[reserved\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[assigned\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[booking\textbackslash{}\_changes] 0
+\item[deposit\textbackslash{}\_type] 0
+\item[agent] 0
+\item[company] 0
+\item[days\textbackslash{}\_in\textbackslash{}\_waiting\textbackslash{}\_list] 0
+\item[customer\textbackslash{}\_type] 0
+\item[adr] 0
+\item[required\textbackslash{}\_car\textbackslash{}\_parking\textbackslash{}\_spaces] 0
+\item[total\textbackslash{}\_of\textbackslash{}\_special\textbackslash{}\_requests] 0
+\item[reservation\textbackslash{}\_status] 0
+\item[reservation\textbackslash{}\_status\textbackslash{}\_date] 0
+\end{description*}
+
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} }
+\PY{n}{cols} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{agent\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{company\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZus{}date\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{country\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}year\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}month\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}week\PYZus{}number\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}day\PYZus{}of\PYZus{}month\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{assigned\PYZus{}room\PYZus{}type\PYZdq{}}\PY{p}{)}
+\PY{n}{dat.clean} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat}\PY{p}{[}\PY{p}{,} \PY{n+nf}{setdiff}\PY{p}{(}\PY{n+nf}{colnames}\PY{p}{(}\PY{n}{dat}\PY{p}{)}\PY{p}{,} \PY{n}{cols}\PY{p}{)}\PY{p}{]}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{MASS}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{caret}\PY{p}{)}
+\PY{n}{training.samples} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} 
+  \PY{n+nf}{createDataPartition}\PY{p}{(}\PY{n}{p} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{,} \PY{n}{list} \PY{o}{=} \PY{k+kc}{FALSE}\PY{p}{)}
+\PY{n}{train}  \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\PY{n}{test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Fit the model}
+\PY{n}{model} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{glm}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{,} \PY{n}{data} \PY{o}{=} \PY{n}{train}\PY{p}{,} \PY{n}{family} \PY{o}{=} \PY{n}{binomial}\PY{p}{)} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}}
+  \PY{n+nf}{stepAIC}\PY{p}{(}\PY{n}{trace} \PY{o}{=} \PY{n+nb+bp}{T}\PY{p}{)}
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{model}\PY{p}{)}
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{model}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Start:  AIC=61876.59
+is\_canceled \textasciitilde{} hotel + lead\_time + stays\_in\_weekend\_nights + stays\_in\_week\_nights
++
+    adults + children + babies + meal + market\_segment + distribution\_channel +
+    is\_repeated\_guest + previous\_cancellations + previous\_bookings\_not\_canceled
++
+    reserved\_room\_type + booking\_changes + deposit\_type + days\_in\_waiting\_list +
+    customer\_type + adr + required\_car\_parking\_spaces +
+total\_of\_special\_requests
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: algorithm did not converge”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: algorithm did not converge”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+                                 Df Deviance   AIC
+- days\_in\_waiting\_list            1    61787 61875
+<none>                                 61787 61877
+- stays\_in\_weekend\_nights         1    61791 61879
+- babies                          1    61793 61881
+- stays\_in\_week\_nights            1    61816 61904
+- hotel                           1    61819 61907
+- children                        1    61824 61912
+- adults                          1    61825 61913
+- reserved\_room\_type              9    61846 61918
+- is\_repeated\_guest               1    61832 61920
+- distribution\_channel            4    61877 61959
+- meal                            4    61904 61986
+- customer\_type                   3    62012 62096
+- adr                             1    62098 62186
+- booking\_changes                 1    62301 62389
+- previous\_bookings\_not\_canceled  1    62655 62743
+- lead\_time                       1    62867 62955
+- market\_segment                  7    63310 63386
+- total\_of\_special\_requests       1    64175 64263
+- previous\_cancellations          1    64247 64335
+- required\_car\_parking\_spaces     1    64526 64614
+- deposit\_type                    2    69061 69147
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Step:  AIC=61874.92
+is\_canceled \textasciitilde{} hotel + lead\_time + stays\_in\_weekend\_nights + stays\_in\_week\_nights
++
+    adults + children + babies + meal + market\_segment + distribution\_channel +
+    is\_repeated\_guest + previous\_cancellations + previous\_bookings\_not\_canceled
++
+    reserved\_room\_type + booking\_changes + deposit\_type + customer\_type +
+    adr + required\_car\_parking\_spaces + total\_of\_special\_requests
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: algorithm did not converge”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: algorithm did not converge”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+Warning message:
+“glm.fit: fitted probabilities numerically 0 or 1 occurred”
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+                                 Df Deviance   AIC
+<none>                                 61787 61875
+- stays\_in\_weekend\_nights         1    61792 61878
+- babies                          1    61793 61879
+- stays\_in\_week\_nights            1    61817 61903
+- hotel                           1    61820 61906
+- children                        1    61824 61910
+- adults                          1    61826 61912
+- reserved\_room\_type              9    61846 61916
+- is\_repeated\_guest               1    61832 61918
+- distribution\_channel            4    61878 61958
+- meal                            4    61905 61985
+- customer\_type                   3    62013 62095
+- adr                             1    62098 62184
+- booking\_changes                 1    62301 62387
+- previous\_bookings\_not\_canceled  1    62658 62744
+- lead\_time                       1    62874 62960
+- market\_segment                  7    63314 63388
+- total\_of\_special\_requests       1    64175 64261
+- previous\_cancellations          1    64258 64344
+- required\_car\_parking\_spaces     1    64527 64613
+- deposit\_type                    2    69065 69149
+    \end{Verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Call:
+glm(formula = is\_canceled \textasciitilde{} hotel + lead\_time + stays\_in\_weekend\_nights + 
+    stays\_in\_week\_nights + adults + children + babies + meal + 
+    market\_segment + distribution\_channel + is\_repeated\_guest + 
+    previous\_cancellations + previous\_bookings\_not\_canceled + 
+    reserved\_room\_type + booking\_changes + deposit\_type + customer\_type + 
+    adr + required\_car\_parking\_spaces + total\_of\_special\_requests, 
+    family = binomial, data = train)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-8.4904  -0.7393  -0.4172   0.1745   6.0232  
+
+Coefficients:
+                                 Estimate Std. Error z value Pr(>|z|)    
+(Intercept)                    -2.495e+00  2.200e-01 -11.337  < 2e-16 ***
+hotelResort Hotel               1.456e-01  2.552e-02   5.708 1.14e-08 ***
+lead\_time                       3.761e-03  1.166e-04  32.238  < 2e-16 ***
+stays\_in\_weekend\_nights         2.590e-02  1.159e-02   2.235  0.02540 *  
+stays\_in\_week\_nights            3.416e-02  6.307e-03   5.416 6.08e-08 ***
+adults                          1.215e-01  2.163e-02   5.615 1.97e-08 ***
+children                        1.989e-01  3.254e-02   6.114 9.72e-10 ***
+babies                          3.261e-01  1.245e-01   2.619  0.00883 ** 
+mealFB                          5.774e-01  1.263e-01   4.571 4.85e-06 ***
+mealHB                         -2.340e-01  3.353e-02  -6.980 2.95e-12 ***
+mealSC                          7.880e-02  3.524e-02   2.236  0.02533 *  
+mealUndefined                  -7.440e-01  1.192e-01  -6.242 4.31e-10 ***
+market\_segmentComplementary     5.059e-01  2.792e-01   1.812  0.06992 .  
+market\_segmentCorporate        -1.191e-01  2.153e-01  -0.553  0.58022    
+market\_segmentDirect            1.723e-01  2.387e-01   0.722  0.47048    
+market\_segmentGroups            5.479e-02  2.251e-01   0.243  0.80772    
+market\_segmentOffline TA/TO    -5.697e-01  2.256e-01  -2.525  0.01156 *  
+market\_segmentOnline TA         6.720e-01  2.250e-01   2.986  0.00282 ** 
+market\_segmentUndefined        -1.353e+02  3.875e+07   0.000  1.00000    
+distribution\_channelDirect     -6.567e-01  1.140e-01  -5.759 8.47e-09 ***
+distribution\_channelGDS        -1.467e+00  3.137e-01  -4.678 2.90e-06 ***
+distribution\_channelTA/TO      -1.956e-02  8.429e-02  -0.232  0.81653    
+distribution\_channelUndefined   1.517e+02  3.875e+07   0.000  1.00000    
+is\_repeated\_guest              -6.605e-01  1.019e-01  -6.484 8.92e-11 ***
+previous\_cancellations          2.913e+00  7.533e-02  38.676  < 2e-16 ***
+previous\_bookings\_not\_canceled -5.661e-01  3.299e-02 -17.158  < 2e-16 ***
+reserved\_room\_typeB             1.026e-01  1.016e-01   1.010  0.31240    
+reserved\_room\_typeC             5.356e-02  1.167e-01   0.459  0.64629    
+reserved\_room\_typeD            -6.535e-02  2.839e-02  -2.302  0.02134 *  
+reserved\_room\_typeE             6.129e-02  4.535e-02   1.351  0.17654    
+reserved\_room\_typeF            -4.774e-01  7.756e-02  -6.156 7.47e-10 ***
+reserved\_room\_typeG            -9.935e-02  8.947e-02  -1.110  0.26685    
+reserved\_room\_typeH            -1.179e-01  1.470e-01  -0.802  0.42242    
+reserved\_room\_typeL            -6.237e-01  1.144e+00  -0.545  0.58561    
+reserved\_room\_typeP             1.457e+01  3.786e+02   0.038  0.96930    
+booking\_changes                -4.161e-01  2.046e-02 -20.340  < 2e-16 ***
+deposit\_typeNon Refund          5.461e+00  1.319e-01  41.413  < 2e-16 ***
+deposit\_typeRefundable         -1.134e-01  2.645e-01  -0.429  0.66823    
+customer\_typeGroup              9.611e-02  1.987e-01   0.484  0.62855    
+customer\_typeTransient          7.583e-01  6.493e-02  11.678  < 2e-16 ***
+customer\_typeTransient-Party    4.262e-01  6.927e-02   6.153 7.61e-10 ***
+adr                             4.714e-03  2.668e-04  17.666  < 2e-16 ***
+required\_car\_parking\_spaces    -3.187e+02  9.718e+05   0.000  0.99974    
+total\_of\_special\_requests      -6.886e-01  1.500e-02 -45.910  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 97132  on 73195  degrees of freedom
+Residual deviance: 61787  on 73152  degrees of freedom
+AIC: 61875
+
+Number of Fisher Scoring iterations: 12
+
+    \end{Verbatim}
+
+    
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Call:
+glm(formula = is\_canceled \textasciitilde{} hotel + lead\_time + stays\_in\_weekend\_nights + 
+    stays\_in\_week\_nights + adults + children + babies + meal + 
+    market\_segment + distribution\_channel + is\_repeated\_guest + 
+    previous\_cancellations + previous\_bookings\_not\_canceled + 
+    reserved\_room\_type + booking\_changes + deposit\_type + customer\_type + 
+    adr + required\_car\_parking\_spaces + total\_of\_special\_requests, 
+    family = binomial, data = train)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-8.4904  -0.7393  -0.4172   0.1745   6.0232  
+
+Coefficients:
+                                 Estimate Std. Error z value Pr(>|z|)    
+(Intercept)                    -2.495e+00  2.200e-01 -11.337  < 2e-16 ***
+hotelResort Hotel               1.456e-01  2.552e-02   5.708 1.14e-08 ***
+lead\_time                       3.761e-03  1.166e-04  32.238  < 2e-16 ***
+stays\_in\_weekend\_nights         2.590e-02  1.159e-02   2.235  0.02540 *  
+stays\_in\_week\_nights            3.416e-02  6.307e-03   5.416 6.08e-08 ***
+adults                          1.215e-01  2.163e-02   5.615 1.97e-08 ***
+children                        1.989e-01  3.254e-02   6.114 9.72e-10 ***
+babies                          3.261e-01  1.245e-01   2.619  0.00883 ** 
+mealFB                          5.774e-01  1.263e-01   4.571 4.85e-06 ***
+mealHB                         -2.340e-01  3.353e-02  -6.980 2.95e-12 ***
+mealSC                          7.880e-02  3.524e-02   2.236  0.02533 *  
+mealUndefined                  -7.440e-01  1.192e-01  -6.242 4.31e-10 ***
+market\_segmentComplementary     5.059e-01  2.792e-01   1.812  0.06992 .  
+market\_segmentCorporate        -1.191e-01  2.153e-01  -0.553  0.58022    
+market\_segmentDirect            1.723e-01  2.387e-01   0.722  0.47048    
+market\_segmentGroups            5.479e-02  2.251e-01   0.243  0.80772    
+market\_segmentOffline TA/TO    -5.697e-01  2.256e-01  -2.525  0.01156 *  
+market\_segmentOnline TA         6.720e-01  2.250e-01   2.986  0.00282 ** 
+market\_segmentUndefined        -1.353e+02  3.875e+07   0.000  1.00000    
+distribution\_channelDirect     -6.567e-01  1.140e-01  -5.759 8.47e-09 ***
+distribution\_channelGDS        -1.467e+00  3.137e-01  -4.678 2.90e-06 ***
+distribution\_channelTA/TO      -1.956e-02  8.429e-02  -0.232  0.81653    
+distribution\_channelUndefined   1.517e+02  3.875e+07   0.000  1.00000    
+is\_repeated\_guest              -6.605e-01  1.019e-01  -6.484 8.92e-11 ***
+previous\_cancellations          2.913e+00  7.533e-02  38.676  < 2e-16 ***
+previous\_bookings\_not\_canceled -5.661e-01  3.299e-02 -17.158  < 2e-16 ***
+reserved\_room\_typeB             1.026e-01  1.016e-01   1.010  0.31240    
+reserved\_room\_typeC             5.356e-02  1.167e-01   0.459  0.64629    
+reserved\_room\_typeD            -6.535e-02  2.839e-02  -2.302  0.02134 *  
+reserved\_room\_typeE             6.129e-02  4.535e-02   1.351  0.17654    
+reserved\_room\_typeF            -4.774e-01  7.756e-02  -6.156 7.47e-10 ***
+reserved\_room\_typeG            -9.935e-02  8.947e-02  -1.110  0.26685    
+reserved\_room\_typeH            -1.179e-01  1.470e-01  -0.802  0.42242    
+reserved\_room\_typeL            -6.237e-01  1.144e+00  -0.545  0.58561    
+reserved\_room\_typeP             1.457e+01  3.786e+02   0.038  0.96930    
+booking\_changes                -4.161e-01  2.046e-02 -20.340  < 2e-16 ***
+deposit\_typeNon Refund          5.461e+00  1.319e-01  41.413  < 2e-16 ***
+deposit\_typeRefundable         -1.134e-01  2.645e-01  -0.429  0.66823    
+customer\_typeGroup              9.611e-02  1.987e-01   0.484  0.62855    
+customer\_typeTransient          7.583e-01  6.493e-02  11.678  < 2e-16 ***
+customer\_typeTransient-Party    4.262e-01  6.927e-02   6.153 7.61e-10 ***
+adr                             4.714e-03  2.668e-04  17.666  < 2e-16 ***
+required\_car\_parking\_spaces    -3.187e+02  9.718e+05   0.000  0.99974    
+total\_of\_special\_requests      -6.886e-01  1.500e-02 -45.910  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 97132  on 73195  degrees of freedom
+Residual deviance: 61787  on 73152  degrees of freedom
+AIC: 61875
+
+Number of Fisher Scoring iterations: 12
+
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{preds} \PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{ifelse}\PY{p}{(}\PY{n+nf}{predict}\PY{p}{(}\PY{n}{model}\PY{p}{,} \PY{n}{test}\PY{p}{)}\PY{o}{\PYZgt{}}\PY{l+m}{0.5}\PY{p}{,} \PY{l+m}{1}\PY{p}{,} \PY{l+m}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} accuray}
+\PY{n+nf}{mean}\PY{p}{(}\PY{n}{preds}\PY{o}{==}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    0.796040677101597
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} ROC}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{pROC}\PY{p}{)}
+\PY{n}{test\PYZus{}prob} \PY{o}{=} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{model}\PY{p}{,} \PY{n}{newdata} \PY{o}{=} \PY{n}{test}\PY{p}{,} \PY{n}{type} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{response\PYZdq{}}\PY{p}{)}
+\PY{n}{test\PYZus{}roc} \PY{o}{=} \PY{n+nf}{roc}\PY{p}{(}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZti{}} \PY{n}{test\PYZus{}prob}\PY{p}{,} \PY{n}{plot} \PY{o}{=} \PY{k+kc}{TRUE}\PY{p}{,} \PY{n}{print.auc} \PY{o}{=} \PY{k+kc}{TRUE}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Type 'citation("pROC")' for a citation.
+
+
+Attaching package: ‘pROC’
+
+
+The following objects are masked from ‘package:stats’:
+
+    cov, smooth, var
+
+
+Setting levels: control = 0, case = 1
+
+Setting direction: controls < cases
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_90_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{decision-tree-boosting-tree-random-forest}{%
+\section{Decision Tree, Boosting Tree, \& Random
+Forest}\label{decision-tree-boosting-tree-random-forest}}
+
+    \hypertarget{decision-tree}{%
+\subsubsection{Decision Tree}\label{decision-tree}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{tidyverse}\PY{p}{)}
+\PY{n}{dat} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{read.csv}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{eu\PYZus{}housing\PYZus{}data.csv\PYZdq{}}\PY{p}{,} \PY{n}{stringsAsFactors} \PY{o}{=} \PY{n+nb+bp}{T}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{20}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{dat}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+          hotel        is\_canceled       lead\_time     arrival\_date\_year
+ City Hotel  :68198   Min.   :0.0000   Min.   :  0.0   Min.   :2015     
+ Resort Hotel:36367   1st Qu.:0.0000   1st Qu.: 19.0   1st Qu.:2016     
+                      Median :0.0000   Median : 72.0   Median :2016     
+                      Mean   :0.3796   Mean   :107.5   Mean   :2016     
+                      3rd Qu.:1.0000   3rd Qu.:166.0   3rd Qu.:2017     
+                      Max.   :1.0000   Max.   :737.0   Max.   :2017     
+                                                                        
+ arrival\_date\_month arrival\_date\_week\_number arrival\_date\_day\_of\_month
+ August :12303      Min.   : 1.0             Min.   : 1.00            
+ July   :10812      1st Qu.:16.0             1st Qu.: 8.00            
+ May    :10164      Median :28.0             Median :16.00            
+ October:10023      Mean   :27.3             Mean   :15.79            
+ April  : 9734      3rd Qu.:38.0             3rd Qu.:23.00            
+ June   : 9424      Max.   :53.0             Max.   :31.00            
+ (Other):42105                                                        
+ stays\_in\_weekend\_nights stays\_in\_week\_nights     adults      
+ Min.   : 0.0000         Min.   : 0.000       Min.   : 0.000  
+ 1st Qu.: 0.0000         1st Qu.: 1.000       1st Qu.: 2.000  
+ Median : 1.0000         Median : 2.000       Median : 2.000  
+ Mean   : 0.9189         Mean   : 2.506       Mean   : 1.852  
+ 3rd Qu.: 2.0000         3rd Qu.: 3.000       3rd Qu.: 2.000  
+ Max.   :16.0000         Max.   :41.000       Max.   :55.000  
+                                                              
+    children            babies                 meal          country     
+ Min.   : 0.00000   Min.   : 0.000000   BB       :80863   PRT    :48590  
+ 1st Qu.: 0.00000   1st Qu.: 0.000000   FB       :  791   GBR    :12129  
+ Median : 0.00000   Median : 0.000000   HB       :13777   FRA    :10415  
+ Mean   : 0.09667   Mean   : 0.008205   SC       : 7985   ESP    : 8568  
+ 3rd Qu.: 0.00000   3rd Qu.: 0.000000   Undefined: 1149   DEU    : 7287  
+ Max.   :10.00000   Max.   :10.000000                     ITA    : 3766  
+ NA's   :4                                                (Other):13810  
+       market\_segment  distribution\_channel is\_repeated\_guest
+ Online TA    :46162   Corporate: 6218      Min.   :0.00000  
+ Offline TA/TO:22795   Direct   :12897      1st Qu.:0.00000  
+ Groups       :18863   GDS      :  152      Median :0.00000  
+ Direct       :10893   TA/TO    :85293      Mean   :0.03536  
+ Corporate    : 4902   Undefined:    5      3rd Qu.:0.00000  
+ Complementary:  719                        Max.   :1.00000  
+ (Other)      :  231                                         
+ previous\_cancellations previous\_bookings\_not\_canceled reserved\_room\_type
+ Min.   : 0.00000       Min.   : 0.0000                A      :76424     
+ 1st Qu.: 0.00000       1st Qu.: 0.0000                D      :16214     
+ Median : 0.00000       Median : 0.0000                E      : 5634     
+ Mean   : 0.09861       Mean   : 0.1483                F      : 2347     
+ 3rd Qu.: 0.00000       3rd Qu.: 0.0000                G      : 1702     
+ Max.   :26.00000       Max.   :72.0000                B      :  901     
+                                                       (Other): 1343     
+ assigned\_room\_type booking\_changes       deposit\_type       agent      
+ A      :65676      Min.   : 0.0000   No Deposit:89856   9      :25138  
+ D      :21814      1st Qu.: 0.0000   Non Refund:14554   NULL   :15083  
+ E      : 6758      Median : 0.0000   Refundable:  155   240    :12331  
+ F      : 3084      Mean   : 0.2143                      1      : 6995  
+ C      : 2122      3rd Qu.: 0.0000                      6      : 3220  
+ G      : 2090      Max.   :21.0000                      14     : 2898  
+ (Other): 3021                                           (Other):38900  
+    company      days\_in\_waiting\_list         customer\_type        adr         
+ NULL   :98201   Min.   :  0.000      Contract       : 3881   Min.   :  -6.38  
+ 40     :  924   1st Qu.:  0.000      Group          :  496   1st Qu.:  67.00  
+ 223    :  781   Median :  0.000      Transient      :77491   Median :  91.94  
+ 67     :  266   Mean   :  2.524      Transient-Party:22697   Mean   : 100.03  
+ 45     :  249   3rd Qu.:  0.000                              3rd Qu.: 123.30  
+ 153    :  206   Max.   :391.000                              Max.   :5400.00  
+ (Other): 3938                                                                 
+ required\_car\_parking\_spaces total\_of\_special\_requests reservation\_status
+ Min.   :0.00000             Min.   :0.0000            Canceled :38752   
+ 1st Qu.:0.00000             1st Qu.:0.0000            Check-Out:64870   
+ Median :0.00000             Median :0.0000            No-Show  :  943   
+ Mean   :0.06292             Mean   :0.5493                              
+ 3rd Qu.:0.00000             3rd Qu.:1.0000                              
+ Max.   :8.00000             Max.   :5.0000                              
+                                                                         
+ reservation\_status\_date
+ 2015-10-21: 1453       
+ 2015-07-06:  804       
+ 2016-11-25:  777       
+ 2015-01-01:  763       
+ 2016-01-18:  604       
+ 2015-07-02:  467       
+ (Other)   :99697       
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{21}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{str}\PY{p}{(}\PY{n}{dat}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+'data.frame':   104565 obs. of  32 variables:
+ \$ hotel                         : Factor w/ 2 levels "City Hotel","Resort
+Hotel": 2 2 2 2 2 2 2 2 2 2 {\ldots}
+ \$ is\_canceled                   : int  0 0 0 0 0 0 0 0 1 1 {\ldots}
+ \$ lead\_time                     : int  342 737 7 13 14 14 0 9 85 75 {\ldots}
+ \$ arrival\_date\_year             : int  2015 2015 2015 2015 2015 2015 2015 2015
+2015 2015 {\ldots}
+ \$ arrival\_date\_month            : Factor w/ 12 levels "April","August",..: 6 6
+6 6 6 6 6 6 6 6 {\ldots}
+ \$ arrival\_date\_week\_number      : int  27 27 27 27 27 27 27 27 27 27 {\ldots}
+ \$ arrival\_date\_day\_of\_month     : int  1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ stays\_in\_weekend\_nights       : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ stays\_in\_week\_nights          : int  0 0 1 1 2 2 2 2 3 3 {\ldots}
+ \$ adults                        : int  2 2 1 1 2 2 2 2 2 2 {\ldots}
+ \$ children                      : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ babies                        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ meal                          : Factor w/ 5 levels "BB","FB","HB",..: 1 1 1 1
+1 1 1 2 1 3 {\ldots}
+ \$ country                       : Factor w/ 28 levels "AUT","BEL","BGR",..: 24
+24 12 12 12 12 24 24 24 24 {\ldots}
+ \$ market\_segment                : Factor w/ 8 levels
+"Aviation","Complementary",..: 4 4 4 3 7 7 4 4 7 6 {\ldots}
+ \$ distribution\_channel          : Factor w/ 5 levels "Corporate","Direct",..: 2
+2 2 1 4 4 2 2 4 4 {\ldots}
+ \$ is\_repeated\_guest             : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ previous\_cancellations        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ previous\_bookings\_not\_canceled: int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ reserved\_room\_type            : Factor w/ 10 levels "A","B","C","D",..: 3 3 1
+1 1 1 3 3 1 4 {\ldots}
+ \$ assigned\_room\_type            : Factor w/ 12 levels "A","B","C","D",..: 3 3 3
+1 1 1 3 3 1 4 {\ldots}
+ \$ booking\_changes               : int  3 4 0 0 0 0 0 0 0 0 {\ldots}
+ \$ deposit\_type                  : Factor w/ 3 levels "No Deposit","Non
+Refund",..: 1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ agent                         : Factor w/ 322 levels "1","10","103",..: 322
+322 322 151 101 101 322 150 101 40 {\ldots}
+ \$ company                       : Factor w/ 343 levels "10","100","101",..: 343
+343 343 343 343 343 343 343 343 343 {\ldots}
+ \$ days\_in\_waiting\_list          : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ customer\_type                 : Factor w/ 4 levels "Contract","Group",..: 3 3
+3 3 3 3 3 3 3 3 {\ldots}
+ \$ adr                           : num  0 0 75 75 98 {\ldots}
+ \$ required\_car\_parking\_spaces   : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ total\_of\_special\_requests     : int  0 0 0 0 1 1 0 1 1 0 {\ldots}
+ \$ reservation\_status            : Factor w/ 3 levels "Canceled","Check-Out",..:
+2 2 2 2 2 2 2 2 1 1 {\ldots}
+ \$ reservation\_status\_date       : Factor w/ 926 levels
+"2014-10-17","2014-11-18",..: 122 122 123 123 124 124 124 124 73 62 {\ldots}
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{colSums}\PY{p}{(}\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} checking na values}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{description*}
+\item[hotel] 0
+\item[is\textbackslash{}\_canceled] 0
+\item[lead\textbackslash{}\_time] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_year] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_month] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_week\textbackslash{}\_number] 0
+\item[arrival\textbackslash{}\_date\textbackslash{}\_day\textbackslash{}\_of\textbackslash{}\_month] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_weekend\textbackslash{}\_nights] 0
+\item[stays\textbackslash{}\_in\textbackslash{}\_week\textbackslash{}\_nights] 0
+\item[adults] 0
+\item[children] 4
+\item[babies] 0
+\item[meal] 0
+\item[country] 0
+\item[market\textbackslash{}\_segment] 0
+\item[distribution\textbackslash{}\_channel] 0
+\item[is\textbackslash{}\_repeated\textbackslash{}\_guest] 0
+\item[previous\textbackslash{}\_cancellations] 0
+\item[previous\textbackslash{}\_bookings\textbackslash{}\_not\textbackslash{}\_canceled] 0
+\item[reserved\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[assigned\textbackslash{}\_room\textbackslash{}\_type] 0
+\item[booking\textbackslash{}\_changes] 0
+\item[deposit\textbackslash{}\_type] 0
+\item[agent] 0
+\item[company] 0
+\item[days\textbackslash{}\_in\textbackslash{}\_waiting\textbackslash{}\_list] 0
+\item[customer\textbackslash{}\_type] 0
+\item[adr] 0
+\item[required\textbackslash{}\_car\textbackslash{}\_parking\textbackslash{}\_spaces] 0
+\item[total\textbackslash{}\_of\textbackslash{}\_special\textbackslash{}\_requests] 0
+\item[reservation\textbackslash{}\_status] 0
+\item[reservation\textbackslash{}\_status\textbackslash{}\_date] 0
+\end{description*}
+
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dat}\PY{o}{\PYZdl{}}\PY{n}{children}\PY{p}{[}\PY{n+nf}{is.na}\PY{p}{(}\PY{n}{dat}\PY{o}{\PYZdl{}}\PY{n}{children}\PY{p}{)}\PY{p}{]} \PY{o}{\PYZlt{}\PYZhy{}} \PY{l+m}{0} \PY{c+c1}{\PYZsh{} fill by mode}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{cols} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{agent\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{company\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZus{}date\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{country\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}year\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}month\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}week\PYZus{}number\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}day\PYZus{}of\PYZus{}month\PYZdq{}}\PY{p}{,}
+          \PY{l+s}{\PYZdq{}}\PY{l+s}{assigned\PYZus{}room\PYZus{}type\PYZdq{}}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{reservation\PYZus{}status\PYZdq{}}\PY{p}{)}
+\PY{n}{dat.clean} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat}\PY{p}{[}\PY{p}{,} \PY{n+nf}{setdiff}\PY{p}{(}\PY{n+nf}{colnames}\PY{p}{(}\PY{n}{dat}\PY{p}{)}\PY{p}{,} \PY{n}{cols}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{25}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{MASS}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{caret}\PY{p}{)}
+\PY{n}{training.samples} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} 
+  \PY{n+nf}{createDataPartition}\PY{p}{(}\PY{n}{p} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{,} \PY{n}{list} \PY{o}{=} \PY{k+kc}{FALSE}\PY{p}{)}
+\PY{n}{train}  \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+\PY{n}{test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat.clean}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{training.samples}\PY{p}{,} \PY{p}{]}
+
+\PY{n}{y.train} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{train}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}
+\PY{n}{y.test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{train}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    Decision Tree
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{rpart}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{rpart.plot}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{mod} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{rpart}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{train}\PY{p}{,} \PY{n}{method}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{class\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{plotcp}\PY{p}{(}\PY{n}{mod}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_105_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{rpart.plot}\PY{p}{(}\PY{n}{mod}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_106_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{preds} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{mod}\PY{p}{,} \PY{n}{test}\PY{p}{,} \PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{class\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{table\PYZus{}mat}  \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{table}\PY{p}{(}\PY{n}{preds}\PY{p}{,} \PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+\PY{n}{table\PYZus{}mat}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+     
+preds     0     1
+    0 17995  4484
+    1  1466  7424
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{accuracy\PYZus{}Test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{sum}\PY{p}{(}\PY{n+nf}{diag}\PY{p}{(}\PY{n}{table\PYZus{}mat}\PY{p}{)}\PY{p}{)} \PY{o}{/} \PY{n+nf}{sum}\PY{p}{(}\PY{n}{table\PYZus{}mat}\PY{p}{)}
+\PY{n}{accuracy\PYZus{}Test}
+\end{Verbatim}
+\end{tcolorbox}
+
+    0.810322292709363
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{print}\PY{p}{(}\PY{n+nf}{paste}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{Accuracy for test\PYZsq{}}\PY{p}{,} \PY{n}{accuracy\PYZus{}Test}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[1] "Accuracy for test 0.810322292709363"
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{pROC}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Type 'citation("pROC")' for a citation.
+
+
+Attaching package: ‘pROC’
+
+
+The following objects are masked from ‘package:stats’:
+
+    cov, smooth, var
+
+
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dc\PYZus{}pred\PYZus{}prob}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{predict}\PY{p}{(}\PY{n}{mod}\PY{p}{,}\PY{n}{test}\PY{p}{,}\PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prob\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{p}{,}\PY{l+m}{2}\PY{p}{]}
+\PY{n}{dc\PYZus{}roc}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{roc}\PY{p}{(}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,}\PY{n}{dc\PYZus{}pred\PYZus{}prob}\PY{p}{,}\PY{n}{auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n+nf}{plot}\PY{p}{(}\PY{n}{dc\PYZus{}roc}\PY{p}{,}\PY{n}{print.auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{,}\PY{n}{print.auc.y}\PY{o}{=}\PY{n}{.}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Setting levels: control = 0, case = 1
+
+Setting direction: controls < cases
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_112_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}Construct function to return accuracy}
+\PY{c+c1}{\PYZsh{}Tune the maximum depth}
+\PY{c+c1}{\PYZsh{}Tune the minimum number of sample a node must have before it can split}
+\PY{c+c1}{\PYZsh{}Tune the minimum number of sample a leaf node must have}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{accuracy\PYZus{}tune} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{function}\PY{p}{(}\PY{n}{fit}\PY{p}{)} \PY{p}{\PYZob{}}
+  \PY{n}{preds} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit}\PY{p}{,} \PY{n}{test}\PY{p}{,} \PY{n}{type} \PY{o}{=} \PY{l+s}{\PYZsq{}}\PY{l+s}{class\PYZsq{}}\PY{p}{)}
+  \PY{n}{table\PYZus{}mat} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{table}\PY{p}{(}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,} \PY{n}{preds}\PY{p}{)}
+  \PY{n}{accuracy\PYZus{}Test} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{sum}\PY{p}{(}\PY{n+nf}{diag}\PY{p}{(}\PY{n}{table\PYZus{}mat}\PY{p}{)}\PY{p}{)} \PY{o}{/} \PY{n+nf}{sum}\PY{p}{(}\PY{n}{table\PYZus{}mat}\PY{p}{)}
+  \PY{n}{accuracy\PYZus{}Test}
+\PY{p}{\PYZcb{}}
+
+\PY{n}{control} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{rpart.control}\PY{p}{(}\PY{n}{minsplit} \PY{o}{=} \PY{l+m}{4}\PY{p}{,}
+                         \PY{n}{minbucket} \PY{o}{=} \PY{n+nf}{round}\PY{p}{(}\PY{l+m}{5} \PY{o}{/} \PY{l+m}{3}\PY{p}{)}\PY{p}{,}
+                         \PY{n}{maxdepth} \PY{o}{=} \PY{l+m}{3}\PY{p}{,}
+                         \PY{n}{cp} \PY{o}{=} \PY{l+m}{0}\PY{p}{)}
+\PY{n}{tune\PYZus{}fit} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{rpart}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{,} \PY{n}{data} \PY{o}{=} \PY{n}{train}\PY{p}{,} \PY{n}{method} \PY{o}{=} \PY{l+s}{\PYZsq{}}\PY{l+s}{class\PYZsq{}}\PY{p}{,} \PY{n}{control} \PY{o}{=} \PY{n}{control}\PY{p}{)}
+\PY{n+nf}{accuracy\PYZus{}tune}\PY{p}{(}\PY{n}{tune\PYZus{}fit}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    0.779495680448851
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{boosting-tree}{%
+\subsubsection{Boosting Tree}\label{boosting-tree}}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{gbm}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Fitting the boosting tree model. In case that we are predicting the
+binary result, we use distribution as ``bernoulli''. Moreover, we select
+to use 1000 iteration trees, 2 depth of tree interaction, and shrinkage
+of 0.01.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{fit.btree} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{gbm}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{,}
+                 \PY{n}{data} \PY{o}{=} \PY{n}{train}\PY{p}{,}
+                 \PY{n}{distribution} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{bernoulli\PYZdq{}}\PY{p}{,}
+                 \PY{n}{n.trees} \PY{o}{=} \PY{l+m}{1000}\PY{p}{,}
+                 \PY{n}{interaction.depth} \PY{o}{=} \PY{l+m}{2}\PY{p}{,}
+                 \PY{n}{cv.folds} \PY{o}{=} \PY{l+m}{2}\PY{p}{,}
+                 \PY{n}{shrinkage} \PY{o}{=} \PY{l+m}{0.01}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    In the summary, ``Deposit\_type'' has the largest influences in our
+model function. The rest factors that also remarcable are
+``lead\_time'', ``market\_segment'', ``previous\_cancellations'', and
+``total\_of\_special\_requests''
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{summary}\PY{p}{(}\PY{n}{fit.btree}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    A data.frame: 21 × 2
+\begin{tabular}{r|ll}
+  & var & rel.inf\\
+  & <fct> & <dbl>\\
+\hline
+	deposit\_type & deposit\_type                   & 55.83367666\\
+	lead\_time & lead\_time                      &  9.61372202\\
+	market\_segment & market\_segment                 &  8.74687385\\
+	previous\_cancellations & previous\_cancellations         &  7.41858626\\
+	total\_of\_special\_requests & total\_of\_special\_requests      &  6.35660001\\
+	required\_car\_parking\_spaces & required\_car\_parking\_spaces    &  4.46861011\\
+	booking\_changes & booking\_changes                &  3.20584056\\
+	customer\_type & customer\_type                  &  2.54648510\\
+	adr & adr                            &  1.12379761\\
+	previous\_bookings\_not\_canceled & previous\_bookings\_not\_canceled &  0.45428106\\
+	hotel & hotel                          &  0.09181246\\
+	reserved\_room\_type & reserved\_room\_type             &  0.06793349\\
+	stays\_in\_week\_nights & stays\_in\_week\_nights           &  0.03728539\\
+	adults & adults                         &  0.02012096\\
+	meal & meal                           &  0.01437445\\
+	stays\_in\_weekend\_nights & stays\_in\_weekend\_nights        &  0.00000000\\
+	children & children                       &  0.00000000\\
+	babies & babies                         &  0.00000000\\
+	distribution\_channel & distribution\_channel           &  0.00000000\\
+	is\_repeated\_guest & is\_repeated\_guest              &  0.00000000\\
+	days\_in\_waiting\_list & days\_in\_waiting\_list           &  0.00000000\\
+\end{tabular}
+
+
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_122_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    We have find out the best iteration of the trees is 1000. It probally
+can do better with more iterations, but it will cause the model run too
+slow.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{best.iter} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{gbm.perf}\PY{p}{(}\PY{n}{fit.btree}\PY{p}{,}\PY{n}{method}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{cv\PYZdq{}}\PY{p}{)}
+\PY{n+nf}{print}\PY{p}{(}\PY{n}{best.iter}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[1] 1000
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_124_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Predict the model
+
+    We use the boosting model we create, test dataset, and best number of
+iteration to predict the model. For the result of the boosting model, we
+can observe that our model perfectly preticted 25240 out of 31369,
+giving the accuracy of 80.46\%. There were 6129 cases that our model got
+wrong. These 6129 cases were divided between False negatives and false
+positives as 335 and 5794 respectively.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{canceled.predict} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{predict}\PY{p}{(}\PY{n}{fit.btree}\PY{p}{,}\PY{n}{test}\PY{p}{,}\PY{n}{n.trees} \PY{o}{=} \PY{n}{best.iter}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{prediction\PYZus{}binary} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{as.factor}\PY{p}{(}\PY{n+nf}{ifelse}\PY{p}{(}\PY{n}{canceled.predict}\PY{o}{\PYZgt{}}\PY{l+m}{0.5}\PY{p}{,} \PY{l+m}{1}\PY{p}{,}\PY{l+m}{0}\PY{p}{)}\PY{p}{)}
+\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+\PY{n+nf}{confusionMatrix}\PY{p}{(}\PY{n}{prediction\PYZus{}binary}\PY{p}{,} \PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0 19301  5794
+         1   335  5939
+                                         
+               Accuracy : 0.8046         
+                 95\% CI : (0.8002, 0.809)
+    No Information Rate : 0.626          
+    P-Value [Acc > NIR] : < 2.2e-16      
+                                         
+                  Kappa : 0.5396         
+                                         
+ Mcnemar's Test P-Value : < 2.2e-16      
+                                         
+            Sensitivity : 0.9829         
+            Specificity : 0.5062         
+         Pos Pred Value : 0.7691         
+         Neg Pred Value : 0.9466         
+             Prevalence : 0.6260         
+         Detection Rate : 0.6153         
+   Detection Prevalence : 0.8000         
+      Balanced Accuracy : 0.7446         
+                                         
+       'Positive' Class : 0              
+                                         
+    \end{Verbatim}
+
+    
+    Plot the ROC curve to check the performance of final model
+
+    As evident, our model has an AUC of 0.870.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nf}{par}\PY{p}{(}\PY{n}{mfrow} \PY{o}{=} \PY{n+nf}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,} \PY{l+m}{1}\PY{p}{)}\PY{p}{)}
+
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{stats}\PY{p}{)}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{pROC}\PY{p}{)}
+\PY{n}{canceled.roc} \PY{o}{=} \PY{n+nf}{roc}\PY{p}{(}\PY{n}{test}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,}\PY{n}{canceled.predict}\PY{p}{,} \PY{n}{auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n+nf}{plot}\PY{p}{(}\PY{n}{canceled.roc}\PY{p}{,} \PY{n}{print.auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{,}\PY{n}{print.auc.y}\PY{o}{=}\PY{n}{.}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Setting levels: control = 0, case = 1
+
+Setting direction: controls < cases
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_131_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{random-forest}{%
+\subsubsection{Random Forest}\label{random-forest}}
+
+    We drop the company and agent columns since there are too many NAs, and
+backward fill the NAs in children column.
+
+Columns like reservation date and country have been removed as they have
+many unique values and cannot be used for building Decision Trees.
+
+    \hypertarget{feature-engineering}{%
+\paragraph{Feature Engineering}\label{feature-engineering}}
+
+Adding a new column to denote number of nights stayed in total and the
+total cost which is calculated as:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dat\PYZus{}eu} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat\PYZus{}eu} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} 
+  \PY{n+nf}{mutate}\PY{p}{(}\PY{n}{stay\PYZus{}nights\PYZus{}total} \PY{o}{=} \PY{n}{stays\PYZus{}in\PYZus{}weekend\PYZus{}nights} \PY{o}{+} \PY{n}{stays\PYZus{}in\PYZus{}week\PYZus{}nights}\PY{p}{)}
+
+\PY{n+nf}{head}\PY{p}{(}\PY{n}{dat\PYZus{}eu}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    A data.frame: 6 × 33
+\begin{tabular}{r|lllllllllllllllllllll}
+  & hotel & is\_canceled & lead\_time & arrival\_date\_year & arrival\_date\_month & arrival\_date\_week\_number & arrival\_date\_day\_of\_month & stays\_in\_weekend\_nights & stays\_in\_week\_nights & adults & ⋯ & agent & company & days\_in\_waiting\_list & customer\_type & adr & required\_car\_parking\_spaces & total\_of\_special\_requests & reservation\_status & reservation\_status\_date & stay\_nights\_total\\
+  & <fct> & <int> & <int> & <int> & <fct> & <int> & <int> & <int> & <int> & <int> & ⋯ & <fct> & <fct> & <int> & <fct> & <dbl> & <int> & <int> & <fct> & <fct> & <int>\\
+\hline
+	18 & Resort Hotel & 0 &  0 & 2015 & July & 27 & 1 & 0 & 1 & 2 & ⋯ & 240 & 110 & 0 & Transient & 107.42 & 0 & 0 & Check-Out & 2015-07-02 & 1\\
+	19 & Resort Hotel & 0 &  7 & 2015 & July & 27 & 1 & 0 & 4 & 2 & ⋯ & 250 & 110 & 0 & Transient & 153.00 & 0 & 1 & Check-Out & 2015-07-05 & 4\\
+	20 & Resort Hotel & 0 & 37 & 2015 & July & 27 & 1 & 1 & 4 & 1 & ⋯ & 241 & 110 & 0 & Transient &  97.29 & 0 & 1 & Check-Out & 2015-07-06 & 5\\
+	21 & Resort Hotel & 0 & 72 & 2015 & July & 27 & 1 & 2 & 4 & 2 & ⋯ & 250 & 110 & 0 & Transient &  84.67 & 0 & 1 & Check-Out & 2015-07-07 & 6\\
+	22 & Resort Hotel & 0 & 72 & 2015 & July & 27 & 1 & 2 & 4 & 2 & ⋯ & 250 & 110 & 0 & Transient &  84.67 & 0 & 1 & Check-Out & 2015-07-07 & 6\\
+	23 & Resort Hotel & 0 & 72 & 2015 & July & 27 & 1 & 2 & 4 & 2 & ⋯ & 250 & 110 & 0 & Transient &  99.67 & 0 & 1 & Check-Out & 2015-07-07 & 6\\
+\end{tabular}
+
+
+    
+    We drop the company and agent columns since there are too many NAs, the
+backward filled values are not reilable for analyzing the model result.
+
+Columns like reservation date,country has been removed as it has many
+unique values and cannot be used for building Decision Trees.
+
+Columns arrival\_date\_week\_number, stays\_in\_weekend\_nights,
+stays\_in\_week\_nights have been removed as they are redundant once we
+have added the columns stay\_nights\_total, stay\_cost\_total.
+
+Column market\_segment is similar as distribution\_channel, so we also
+drop it.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{dat\PYZus{}rf} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat\PYZus{}eu}\PY{p}{[}\PY{n+nf}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{hotel\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{is\PYZus{}canceled\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{lead\PYZus{}time\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{adults\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{children\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{babies\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{meal\PYZsq{}}\PY{p}{,}
+                                \PY{l+s}{\PYZsq{}}\PY{l+s}{distribution\PYZus{}channel\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{is\PYZus{}repeated\PYZus{}guest\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{adr\PYZsq{}}\PY{p}{,}
+                                \PY{l+s}{\PYZsq{}}\PY{l+s}{previous\PYZus{}cancellations\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{previous\PYZus{}bookings\PYZus{}not\PYZus{}canceled\PYZsq{}}\PY{p}{,}
+                                \PY{l+s}{\PYZsq{}}\PY{l+s}{deposit\PYZus{}type\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{days\PYZus{}in\PYZus{}waiting\PYZus{}list\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{customer\PYZus{}type\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}year\PYZsq{}}\PY{p}{,}
+                                \PY{l+s}{\PYZsq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}month\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{arrival\PYZus{}date\PYZus{}day\PYZus{}of\PYZus{}month\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{reserved\PYZus{}room\PYZus{}type\PYZsq{}}\PY{p}{,}
+                                \PY{l+s}{\PYZsq{}}\PY{l+s}{required\PYZus{}car\PYZus{}parking\PYZus{}spaces\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{stay\PYZus{}nights\PYZus{}total\PYZsq{}}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{dat\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{dat\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+\PY{n}{dat\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}repeated\PYZus{}guest} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{dat\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}repeated\PYZus{}guest}\PY{p}{)}
+\PY{n+nf}{str}\PY{p}{(}\PY{n}{dat\PYZus{}rf}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+'data.frame':   104548 obs. of  21 variables:
+ \$ hotel                         : Factor w/ 2 levels "City Hotel","Resort
+Hotel": 2 2 2 2 2 2 2 2 2 2 {\ldots}
+ \$ is\_canceled                   : Factor w/ 2 levels "0","1": 1 1 1 1 1 1 1 1 1
+2 {\ldots}
+ \$ lead\_time                     : int  0 7 37 72 72 72 127 78 48 60 {\ldots}
+ \$ adults                        : int  2 2 1 2 2 2 2 2 2 2 {\ldots}
+ \$ children                      : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ babies                        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ meal                          : Factor w/ 5 levels "BB","FB","HB",..: 1 1 1 1
+1 1 3 1 1 1 {\ldots}
+ \$ distribution\_channel          : Factor w/ 5 levels "Corporate","Direct",..: 1
+2 4 2 2 2 4 4 4 4 {\ldots}
+ \$ is\_repeated\_guest             : Factor w/ 2 levels "0","1": 1 1 1 1 1 1 1 1 1
+1 {\ldots}
+ \$ adr                           : num  107.4 153 97.3 84.7 84.7 {\ldots}
+ \$ previous\_cancellations        : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ previous\_bookings\_not\_canceled: int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ deposit\_type                  : Factor w/ 3 levels "No Deposit","Non
+Refund",..: 1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ days\_in\_waiting\_list          : int  0 0 0 0 0 0 0 0 0 0 {\ldots}
+ \$ customer\_type                 : Factor w/ 4 levels "Contract","Group",..: 3 3
+3 3 3 3 1 3 1 3 {\ldots}
+ \$ arrival\_date\_year             : int  2015 2015 2015 2015 2015 2015 2015 2015
+2015 2015 {\ldots}
+ \$ arrival\_date\_month            : Factor w/ 12 levels "April","August",..: 6 6
+6 6 6 6 6 6 6 6 {\ldots}
+ \$ arrival\_date\_day\_of\_month     : int  1 1 1 1 1 1 1 1 1 1 {\ldots}
+ \$ reserved\_room\_type            : Factor w/ 10 levels "A","B","C","D",..: 1 7 6
+1 1 4 4 4 4 5 {\ldots}
+ \$ required\_car\_parking\_spaces   : int  0 0 0 0 0 0 0 1 0 0 {\ldots}
+ \$ stay\_nights\_total             : int  1 4 5 6 6 6 7 7 7 7 {\ldots}
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} convert all factors to numeric}
+\PY{n}{df} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n}{dat\PYZus{}rf} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} \PY{n+nf}{mutate\PYZus{}if}\PY{p}{(}\PY{n}{is.factor}\PY{p}{,} \PY{n}{as.numeric}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} check multicollinearity }
+\PY{n+nf}{corrplot}\PY{p}{(}\PY{n+nf}{cor}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{,}\PY{n}{tl.cex} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_142_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    There is no obvious multicollinearity among the independent variables.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{18}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} The dataset is split into train and test set in 70:30 ratio with the is\PYZus{}canceled feature as the response}
+\PY{n+nf}{library}\PY{p}{(}\PY{n}{caTools}\PY{p}{)}
+\PY{n+nf}{set.seed}\PY{p}{(}\PY{l+m}{100}\PY{p}{)}
+\PY{n}{split} \PY{o}{=} \PY{n+nf}{sample.split}\PY{p}{(}\PY{n}{dat\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,} \PY{n}{SplitRatio} \PY{o}{=} \PY{l+m}{0.7}\PY{p}{)}
+\PY{n}{train\PYZus{}rf} \PY{o}{=} \PY{n+nf}{subset}\PY{p}{(}\PY{n}{dat\PYZus{}rf}\PY{p}{,} \PY{n}{split} \PY{o}{==} \PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n}{test\PYZus{}rf} \PY{o}{=} \PY{n+nf}{subset}\PY{p}{(}\PY{n}{dat\PYZus{}rf}\PY{p}{,} \PY{n}{split} \PY{o}{==} \PY{k+kc}{FALSE}\PY{p}{)}
+\PY{n+nf}{dim}\PY{p}{(}\PY{n}{train\PYZus{}rf}\PY{p}{)}
+\PY{n+nf}{dim}\PY{p}{(}\PY{n}{test\PYZus{}rf}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{enumerate*}
+\item 73183
+\item 21
+\end{enumerate*}
+
+
+    
+    \begin{enumerate*}
+\item 31365
+\item 21
+\end{enumerate*}
+
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Fit a random forest model with mtry=2 on the training set}
+\PY{n+nf}{set.seed}\PY{p}{(}\PY{l+m}{100}\PY{p}{)}
+\PY{n}{rf\PYZus{}model1}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{randomForest}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{,}    
+                        \PY{n}{data}\PY{o}{=}\PY{n}{train\PYZus{}rf}\PY{p}{,}          
+                        \PY{n}{ntree}\PY{o}{=}\PY{l+m}{500}\PY{p}{,}                     
+                        \PY{n}{cutoff}\PY{o}{=}\PY{n+nf}{c}\PY{p}{(}\PY{l+m}{0.5}\PY{p}{,}\PY{l+m}{0.5}\PY{p}{)}\PY{p}{,} 
+                        \PY{n}{mtry}\PY{o}{=}\PY{l+m}{2}\PY{p}{,}
+                        \PY{n}{importance}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n}{rf\PYZus{}model1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Call:
+ randomForest(formula = is\_canceled \textasciitilde{} ., data = train\_rf, ntree = 500,      cutoff = c(0.5, 0.5), mtry = 2, importance = TRUE) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 2
+
+        OOB estimate of  error rate: 20.95\%
+Confusion matrix:
+      0     1 class.error
+0 45136   263 0.005793079
+1 15068 12716 0.542326519
+    \end{Verbatim}
+
+    
+    OOB error is the mean prediction error on each training variable.
+
+The above model gave an error rate of 20.95\% on OOB dataset.
+
+We will try to find the best hyper parameter value for mtry after
+tuning.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{58}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Tuning parameter}
+\PY{n+nf}{set.seed}\PY{p}{(}\PY{l+m}{100}\PY{p}{)}              
+\PY{n}{rf\PYZus{}model2} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{tuneRF}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{n}{train\PYZus{}rf}\PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}}\PY{n+nf}{select}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}\PY{p}{,}
+                    \PY{n}{y} \PY{o}{=} \PY{n}{train\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,}\PY{n}{mtryStart}\PY{o}{=}\PY{l+m}{2}\PY{p}{,}
+                    \PY{n}{ntreeTry} \PY{o}{=} \PY{l+m}{500}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+mtry = 2  OOB error = 20.85\%
+Searching left {\ldots}
+mtry = 1        OOB error = 24.39\%
+-0.1699771 0.05
+Searching right {\ldots}
+mtry = 4        OOB error = 16.43\%
+0.211865 0.05
+mtry = 8        OOB error = 15.8\%
+0.03801048 0.05
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_147_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The model is showing least Out of Bound(OOB) error for mtry=8. Now train
+the model based on the new mtry value.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{19}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Fit a new model with mtry=8}
+\PY{n}{rf\PYZus{}model3}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{randomForest}\PY{p}{(}\PY{n}{is\PYZus{}canceled}\PY{o}{\PYZti{}}\PY{n}{.}\PY{p}{,}              
+                        \PY{n}{data}\PY{o}{=}\PY{n}{train\PYZus{}rf}\PY{p}{,}          
+                        \PY{n}{ntree}\PY{o}{=}\PY{l+m}{500}\PY{p}{,}                     
+                        \PY{n}{cutoff}\PY{o}{=}\PY{n+nf}{c}\PY{p}{(}\PY{l+m}{0.5}\PY{p}{,}\PY{l+m}{0.5}\PY{p}{)}\PY{p}{,} 
+                        \PY{n}{mtry}\PY{o}{=}\PY{l+m}{8}\PY{p}{,}
+                        \PY{n}{importance}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n}{rf\PYZus{}model3}
+\end{Verbatim}
+\end{tcolorbox}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Call:
+ randomForest(formula = is\_canceled \textasciitilde{} ., data = train\_rf, ntree = 500,      cutoff = c(0.5, 0.5), mtry = 8, importance = TRUE) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 8
+
+        OOB estimate of  error rate: 15.87\%
+Confusion matrix:
+      0     1 class.error
+0 41536  3863  0.08508998
+1  7749 20035  0.27890153
+    \end{Verbatim}
+
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Prediction on the test set}
+\PY{n}{rf\PYZus{}pred\PYZus{}class}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{predict}\PY{p}{(}\PY{n}{rf\PYZus{}model3}\PY{p}{,}\PY{n}{test\PYZus{}rf}\PY{p}{,}\PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{class\PYZdq{}}\PY{p}{)}
+\PY{n+nf}{confusionMatrix}\PY{p}{(}\PY{n+nf}{as.factor}\PY{p}{(}\PY{n}{rf\PYZus{}pred\PYZus{}class}\PY{p}{)}\PY{p}{,}\PY{n}{test\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Installing package into ‘/home/jupyter/.R/library’
+(as ‘lib’ is unspecified)
+
+    \end{Verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0 17794  3261
+         1  1663  8647
+                                         
+               Accuracy : 0.843          
+                 95\% CI : (0.8389, 0.847)
+    No Information Rate : 0.6203         
+    P-Value [Acc > NIR] : < 2.2e-16      
+                                         
+                  Kappa : 0.6578         
+                                         
+ Mcnemar's Test P-Value : < 2.2e-16      
+                                         
+            Sensitivity : 0.9145         
+            Specificity : 0.7262         
+         Pos Pred Value : 0.8451         
+         Neg Pred Value : 0.8387         
+             Prevalence : 0.6203         
+         Detection Rate : 0.5673         
+   Detection Prevalence : 0.6713         
+      Balanced Accuracy : 0.8203         
+                                         
+       'Positive' Class : 0              
+                                         
+    \end{Verbatim}
+
+    
+    After Evaluating the probabilities and the class, the best random forest
+model gave an accuracy of 0.843.
+
+Then we plot the ROC curve. The AUC is also good.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Plot the ROC curve to check the performance of final model}
+\PY{n}{rf\PYZus{}pred\PYZus{}prob}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{predict}\PY{p}{(}\PY{n}{rf\PYZus{}model3}\PY{p}{,}\PY{n}{test\PYZus{}rf}\PY{p}{,}\PY{n}{type}\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{prob\PYZdq{}}\PY{p}{)}\PY{p}{[}\PY{p}{,}\PY{l+m}{2}\PY{p}{]}
+\PY{n}{rf\PYZus{}roc}\PY{o}{\PYZlt{}\PYZhy{}}\PY{n+nf}{roc}\PY{p}{(}\PY{n}{test\PYZus{}rf}\PY{o}{\PYZdl{}}\PY{n}{is\PYZus{}canceled}\PY{p}{,}\PY{n}{rf\PYZus{}pred\PYZus{}prob}\PY{p}{,}\PY{n}{auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
+\PY{n+nf}{plot}\PY{p}{(}\PY{n}{rf\PYZus{}roc}\PY{p}{,}\PY{n}{print.auc}\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{,}\PY{n}{print.auc.y}\PY{o}{=}\PY{n}{.}\PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Setting levels: control = 0, case = 1
+
+Setting direction: controls < cases
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_152_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{26}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}check variables that are most predictive using variable importance plot}
+\PY{c+c1}{\PYZsh{} make dataframe from importance() output}
+  \PY{n}{feat\PYZus{}imp\PYZus{}df} \PY{o}{\PYZlt{}\PYZhy{}} \PY{n+nf}{importance}\PY{p}{(}\PY{n}{rf\PYZus{}model3}\PY{p}{)} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} 
+    \PY{n+nf}{data.frame}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZpc{}\PYZgt{}\PYZpc{}} 
+    \PY{n+nf}{mutate}\PY{p}{(}\PY{n}{feature} \PY{o}{=} \PY{n+nf}{row.names}\PY{p}{(}\PY{n}{.}\PY{p}{)}\PY{p}{)} 
+
+  \PY{c+c1}{\PYZsh{} plot dataframe}
+  \PY{n+nf}{ggplot}\PY{p}{(}\PY{n}{feat\PYZus{}imp\PYZus{}df}\PY{p}{,} \PY{n+nf}{aes}\PY{p}{(}\PY{n}{x} \PY{o}{=} \PY{n+nf}{reorder}\PY{p}{(}\PY{n}{feature}\PY{p}{,} \PY{n}{MeanDecreaseGini}\PY{p}{)}\PY{p}{,} 
+                         \PY{n}{y} \PY{o}{=} \PY{n}{MeanDecreaseGini}\PY{p}{)}\PY{p}{)} \PY{o}{+}
+    \PY{n+nf}{geom\PYZus{}bar}\PY{p}{(}\PY{n}{stat}\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{identity\PYZsq{}}\PY{p}{)} \PY{o}{+}
+    \PY{n+nf}{coord\PYZus{}flip}\PY{p}{(}\PY{p}{)} \PY{o}{+}
+    \PY{n+nf}{theme\PYZus{}classic}\PY{p}{(}\PY{p}{)} \PY{o}{+}
+    \PY{n+nf}{labs}\PY{p}{(}
+      \PY{n}{x}     \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Feature\PYZdq{}}\PY{p}{,}
+      \PY{n}{y}     \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Importance\PYZdq{}}\PY{p}{,}
+      \PY{n}{title} \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Feature Importance: \PYZlt{}Model\PYZgt{}\PYZdq{}}
+    \PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_153_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    From the plot of feature importance we notice that the deposit\_type (No
+Deposit, Non Refund and Refundable), lead\_time (Number of days that
+elapsed between the entering date of the booking and the arrival date),
+adr (Average Daily Rate) and arrival\_date (Day of arrival date) are the
+most important features in the model. They are also the features that
+affected the cancelation the most.
+
+    \hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+    \begin{itemize}
+\item
+  From the result of several prediction models, we notice that the
+  deposit\_type (if the customer made a deposit to guarantee the
+  booking), lead\_time (Number of days between the booking and the
+  arrival date), adr (Average Daily Rate),Previous\_cancellations
+  (number of previous bookings that were cancelled by the customer) and
+  Total number of special request and Market segment are the most
+  important features which contributed a lot to the predictions.
+\item
+  In the future, the hotels manager could pay more attention to these
+  kinds of factors to get more information for why customers cancel and
+  make some changes to avoid high cancellation rate.
+\end{itemize}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
